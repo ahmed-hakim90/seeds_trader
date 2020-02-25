@@ -1,0 +1,105 @@
+// layout start
+@import 'layout/tabledata';
+@import 'layout/loader';
+//layoout end
+@import 'page/app';
+@import 'page/home';
+@import 'page/accountClient';
+@import 'page/clients';
+@import 'page/print';
+
+@font-face {
+  font-family: 'Almarai';
+  src: url('../assets/fonts/Almarai-Bold.ttf');
+
+}
+
+@font-face {
+  font-family: 'Almarai';
+  src: url('../assets/fonts/Almarai-ExtraBold.ttf');
+}
+
+@font-face {
+  font-family: 'Almarai';
+  src: url('../assets/fonts/Almarai-Light.ttf');
+}
+
+* {
+  font-family: 'Almarai',
+    sans-serif;
+
+}
+
+.padding-0 {
+  padding: 0;
+}
+
+.loginDialog {
+  .v-overlay__scrim {
+    display: block;
+    opacity: 1 !important;
+    background: url('../assets/img/assortment-batch-colors-cooking-625422.jpg');
+  }
+
+}
+
+.add-client {
+  .headline.title {
+    margin-top: 80px !important;
+  }
+
+
+  .overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #294964df !important;
+  }
+}
+
+.login-page {
+  .add-client {
+    height: 95vh !important;
+  }
+}
+
+.login {
+  width: 500px;
+  padding: 20px 0 15px 0;
+  position: absolute;
+  background-image: radial-gradient(circle farthest-corner at -8.9% 51.2%, rgba(255, 124, 0, 1) 0%, rgba(255, 124, 0, 1) 15.9%, rgba(255, 163, 77, 1) 15.9%, rgba(255, 163, 77, 1) 24.4%, rgba(19, 30, 37, 1) 24.5%, rgba(19, 30, 37, 1) 66%);
+  top: 50%;
+  margin-top: -200px;
+  right: 50%;
+  margin-right: -250px;
+  border-radius: 50px !important;
+  -webkit-border-radius: 50px !important;
+  -moz-border-radius: 50px !important;
+  -ms-border-radius: 50px !important;
+  -o-border-radius: 50px !important;
+}
+
+.bg-radio-btn {
+  padding: 0 20px 0 0;
+}
+
+.v-navigation-drawer.v-navigation-drawer--fixed.v-navigation-drawer--mini-variant.v-navigation-drawer--open.v-navigation-drawer--open-on-hover.theme--dark {
+  .v-navigation-drawer .v-list-item .v-list-item__title {
+    font-size: 12px !important
+  }
+}
+
+
+.image-home {
+  position: absolute;
+  top: 170px;
+
+  background: url(../assets/img/1354.svg) no-repeat -95% -79%;
+  background-size: 100% 110%;
+  width: 100%;
+  height: 39rem;
+}

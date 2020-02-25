@@ -1,0 +1,13 @@
+@media print {
+
+    .full-report th:last-child,
+    .full-report td:last-child,
+
+    #print-btn,
+    .not-print,
+    .v-data-footer,
+    .v-navigation-drawer {
+        display: none;
+    }
+
+}

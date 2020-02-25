@@ -1,0 +1,61 @@
+.main-color {
+  color: #294964;
+}
+
+.theme--light.v-data-table tbody tr:not(:last-child) td:last-child {
+  color: #294964;
+
+}
+
+.theme--light.v-data-table tbody tr:nth-of-type(odd) {
+  background-color: #ecf5fd99 !important;
+}
+
+.theme--light.v-data-table tbody tr:nth-of-type(odd):hover {
+  background-color: #eeeeee !important;
+}
+
+.home-btn {
+
+  .theme--dark.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
+    font-weight: bolder;
+    transition: all 0.2335s ease-in-out;
+    -webkit-transition: all 0.2335s ease-in-out;
+    -moz-transition: all 0.2335s ease-in-out;
+    -ms-transition: all 0.2335s ease-in-out;
+    -o-transition: all 0.2335s ease-in-out;
+    background-image: radial-gradient(circle farthest-corner at -8.9% 51.2%, rgba(255, 124, 0, 1) 0%, rgba(255, 124, 0, 1) 15.9%, rgba(255, 163, 77, 1) 15.9%, rgba(255, 163, 77, 1) 24.4%, rgba(19, 30, 37, 1) 24.5%, rgba(19, 30, 37, 1) 66%);
+    color: #fff;
+
+    &:hover {
+      background: #ecf5fd !important;
+      color: #294964;
+    }
+  }
+
+}
+
+.marginleft {
+  margin: 30px 20px 40px 0;
+
+  .v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)>.v-input__control>.v-input__slot {
+    border: 1px solid #294964;
+  }
+
+  .v-text-field fieldset,
+  .v-text-field .v-input__control {
+    border-radius: 24px;
+    -webkit-border-radius: 24px;
+    -moz-border-radius: 24px;
+    -ms-border-radius: 24px;
+    -o-border-radius: 24px;
+  }
+}
+
+@media (min-width:978px) {
+
+  .marginleft {
+    margin: 30px 100px 40px 0;
+  }
+
+}

@@ -1,0 +1,4 @@
+.v-card>*:first-child:not(.v-btn):not(.v-chip),
+.v-card>.v-card__progress+*:not(.v-btn):not(.v-chip) {
+  color: #fff;
+}

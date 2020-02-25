@@ -1,0 +1,108 @@
+.line-after {
+  color: #294964;
+
+  &::after {
+    content: ' ';
+    display: block;
+    width: 15%;
+    height: 100%;
+    margin: auto;
+    border-bottom: 2px solid #294964;
+  }
+}
+
+.left-side-card {
+  height: 115px;
+  border-right: 2px solid #bce0fd;
+
+  table {
+    width: 100%;
+    height: 118px;
+
+    tbody {
+
+      tr {
+        th {
+          border-top: 1px solid #bce0fd;
+          border-bottom: 1px solid #bce0fd;
+          font-weight: bold;
+          font-size: 1.11rem
+        }
+
+        th:not(:last-of-type) {
+          border-left: 1px solid #bce0fd;
+        }
+
+        td {
+          text-align: center;
+          font-weight: bold;
+        }
+
+        td:not(:last-of-type) {
+          border-left: 1px solid #bce0fd;
+        }
+      }
+    }
+  }
+}
+
+.padding-card {
+  padding: 0 20px;
+}
+
+.show-data-clients {
+
+  .v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)>.v-input__control>.v-input__slot {
+    border: 1px solid #294964;
+  }
+
+  // .v-text-field fieldset,
+  // .v-text-field .v-input__control {
+  //   border-radius: 24px;
+  //   -webkit-border-radius: 24px;
+  //   -moz-border-radius: 24px;
+  //   -ms-border-radius: 24px;
+  //   -o-border-radius: 24px;
+  // }
+
+  .v-text-field.v-text-field--enclosed .v-text-field__details {
+    margin-bottom: 0;
+    display: none;
+  }
+
+  .theme--light.v-input input,
+  .theme--light.v-input textarea,
+  .v-text-field.v-text-field--solo .v-label {
+    color: #294964 !important;
+    font-weight: bold;
+  }
+
+  .container-search-data-clients {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .v-data-footer__icons-after {
+    margin-right: 10px
+  }
+
+  .v-btn__content {
+    height: 30px;
+    background-color: #294964;
+    color: #fff;
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+
+
+  }
+}
+
+.v-speed-dial--direction-top .v-speed-dial__list,
+.v-speed-dial--direction-bottom .v-speed-dial__list {
+  left: -28px;
+  top: -250px;
+  width: 100%;
+}

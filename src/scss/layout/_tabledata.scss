@@ -1,0 +1,47 @@
+  .theme--light.v-data-table thead tr:last-child th {
+    background-color: #294964;
+    color: #fff;
+
+  }
+
+  .theme--light.v-data-table .v-data-table-header th.sortable:hover,
+  .theme--light.v-data-table .v-data-table-header th.sortable.active,
+  .mdi-arrow-up::before {
+    color: #bce0fd !important;
+  }
+
+
+  .v-data-table td,
+  .v-data-table th {
+    color: #294964;
+  }
+
+  .v-data-table__empty-wrapper {
+    display: none;
+  }
+
+  .v-text-field__details {
+    display: none
+  }
+
+  .left-side-card {
+
+    th {
+      font-size: 14px !important
+    }
+  }
+
+  .v-data-table td,
+  .v-data-table th {
+    padding: 0 8px;
+  }
+
+  .input-add-order {
+.v-text-field__slot,
+    .v-select__selections,
+    .v-input__icon--clear,
+    .v-autocomplete:not(.v-input--is-disabled).v-select.v-text-field input {
+      font-size: 13px
+    }
+
+  }
