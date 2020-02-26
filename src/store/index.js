@@ -52,20 +52,20 @@ export default new Vuex.Store({
     GET_REPORTSEED(state, reportSeed) {
       state.reportSeed = reportSeed;
     },
-    setLoading(state, payload) {
+    SET_LOADING(state, payload) {
       state.loading = payload;
     }
   },
   actions: {
     loadClients({ commit }) {
       let Console = console;
-      commit("setLoading", true);
+      commit("SET_LOADING", true);
 
       Axios.get("http://localhost:8087/api/allClients")
         .then(res => {
           let clients = res.data;
           // Console.log(clients);
-          commit("setLoading", false);
+          commit("SET_LOADING", false);
           commit("SET_CLIENTS", clients);
         })
         .catch(err => {
@@ -74,14 +74,14 @@ export default new Vuex.Store({
     },
     loadSeeds({ commit }) {
       let Console = console;
-      commit("setLoading", true);
+      commit("SET_LOADING", true);
 
       Axios.get("http://localhost:8087/api/allSeeds")
         .then(res => {
           let seeds = res.data;
           // Console.log(seeds);
           commit("SET_SEEDS", seeds);
-          commit("setLoading", false);
+          commit("SET_LOADING", false);
         })
         .catch(err => {
           Console.log(err);
@@ -130,40 +130,75 @@ export default new Vuex.Store({
         });
     },
     // saves  |||||||||||||||||||||||||||||||||||||||
-    // saveOrder(payload) {
-    //   let Order = {
-    //     clientPhone: payload.clientPhone,
-    //     clientId: payload.clientId,
-    //     clientName: payload.clientName,
-    //     clientBalance: payload.clientBalance,
-    //     seedName: payload.seedName,
-    //     seedId: payload.seedId,
-    //     unit: payload.unit,
-    //     note: payload.note,
-    //     type: payload.type,
-    //     quantity: payload.quantity,
-    //     sellingPrice: payload.sellingPrice,
-    //     buyingPrice: payload.buyingPrice,
-    //     unitPrice: payload.unitPrice,
-    //     haraka: payload.haraka,
-    //     dofaatSadera: payload.dofaatSadera,
-    //     tahdeen: payload.tahdeen,
-    //     khasmMoktsb: payload.khasmMoktsb,
-    //     mortgaa: payload.mortgaa,
-    //     moshtryat: payload.moshtryat,
-    //     dofaatWareda: payload.dofaatWareda
-    //   };
-    //   console.error(Order);
-    //   Axios.post(`http://localhost:8087/api/saveOrder/${Order}`).then(
-    //     result => {
-    //       this.response = result.data;
-    //     },
-    //     error => {
-    //       var Console = console;
-    //       Console.error(error);
-    //     }
-    //   );
-    // },
+    saveOrder({ commit }, { Order }) {
+      commit("SET_LOADING", true);
+      commit("SET_SUCCESS", false);
+      Axios({
+        method: "POST",
+        url: "http://localhost:8087/api/saveOrder",
+        data: Order,
+        headers: { "Content-Type": "application/json" }
+      })
+        .then(
+          result => {
+            this.response = result.data;
+            commit("CLEAR_ERROR", true);
+            // commit("SET_SUCCESS", true);
+            commit("SET_SUCCESS", true);
+
+            // dispatch("loadAccountClient");
+          },
+          error => {
+            var Console = console;
+            Console.error(error);
+          }
+        )
+        .finally(() => {
+          setTimeout(() => {
+            commit("SET_SUCCESS", false);
+          }, 2200);
+
+          commit("SET_LOADING", false);
+        });
+    },
+    saveSeed({ commit }, { seed }) {
+      Axios({
+        method: "POST",
+        url: "http://localhost:8087/api/saveSeed",
+        data: seed,
+        headers: { "Content-Type": "application/json" }
+      }).then(
+        result => {
+          this.response = result.data;
+          commit("CLEAR_ERROR", true);
+          commit("SET_SUCCESS", true);
+          // commit("loadAccountClient");
+        },
+        error => {
+          var Console = console;
+          Console.error(error);
+        }
+      );
+    },
+    saveClient({ commit }, { client }) {
+      Axios({
+        method: "POST",
+        url: "http://localhost:8087/api/saveClient",
+        data: client,
+        headers: { "Content-Type": "application/json" }
+      }).then(
+        result => {
+          this.response = result.data;
+          commit("CLEAR_ERROR", true);
+          commit("SET_SUCCESS", true);
+          // commit("loadAccountClient");
+        },
+        error => {
+          var Console = console;
+          Console.error(error);
+        }
+      );
+    },
     //  to login from axios and save in session
     loginVuex({ commit }, payload) {
       Axios.get(
@@ -172,10 +207,7 @@ export default new Vuex.Store({
         .then(res => {
           let loginApi = res.data;
           if (loginApi) {
-            window.sessionStorage.setItem(
-              "password",
-              JSON.stringify(payload.password)
-            );
+            window.sessionStorage.setItem("password", payload.password);
             commit("SET_USER", loginApi);
             commit("Toggle_NAV", true);
             commit("CLEAR_ERROR", false);
@@ -209,9 +241,11 @@ export default new Vuex.Store({
     error(state) {
       return state.error;
     },
+    success(state) {
+      return state.success;
+    },
     navbar(state) {
       return state.navbar;
     }
-  },
-  modules: {}
+  }
 });

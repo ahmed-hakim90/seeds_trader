@@ -142,13 +142,13 @@
       <v-icon class="ml-2">mdi-printer</v-icon>
       طباعة
     </v-btn>
+    <v-alert type="success" class="" v-if="showMsgSuc">
+      {{ msg }}
+    </v-alert>
+    <v-alert type="error" v-if="msgError">
+      {{ msg }}
+    </v-alert>
     <v-col cols="12" class="text-center">
-      <v-alert type="success" v-if="showMsgSuc">
-        تم التعديل بنجاح
-      </v-alert>
-      <v-alert type="error" v-if="msgError">
-        {{ msg }}
-      </v-alert>
       <p class="display-1 line-after">تقرير شامل</p>
     </v-col>
     <v-row class="to-print">
@@ -396,28 +396,7 @@ export default {
       moshtryat: 0,
       dofaatWareda: 0
     },
-    balanceOpen: {
-      clientPhone: "",
-      clientId: "",
-      clientName: "",
-      clientBalance: 0,
-      seedName: "خس",
-      seedId: 3,
-      unit: "كيلو",
-      type: "شراء",
-      quantity: 5,
-      sellingPrice: 10,
-      buyingPrice: 0,
-      haraka: "",
-      dofaatSadera: 0,
-      tahdeen: 0,
-      khasmMoktsb: 0,
-      mortgaa: 0,
-      moshtryat: 0,
-      dofaatWareda: 0
-    },
     headersName: [
-      // { text: "الرقم ", value: "num" },
       { text: "التاريخ ", value: "date", dataType: "Date", align: "center" },
       { text: "اسم العميل ", value: "clientName", align: "center" },
       { text: "رصيد ", value: "clientBalance", align: "center" },
@@ -426,17 +405,9 @@ export default {
       { text: "الكمية", value: "quantity", align: "center" },
       { text: "الوحدة", value: "unit", align: "center" },
       { text: "سعر الوحدة", value: "unitPrice", align: "center" },
-      // { text: "سعر الشراء", value: "sellingPrice", align: "center" },
-      // { text: "سعر البيع", value: "buyingPrice", align: "center" },
       { text: "دائن", value: "maden", align: "center" },
       { text: "مدين", value: "dayen", align: "center" },
       { text: "نوع الطلب", value: "type", align: "center" },
-      // { text: "دفعات صادرة", value: "dofaatSadera", align: "center" },
-      // { text: "تحضين", value: "tahdeen" },
-      // { text: "خصم مكتسب", value: "khasmMoktsb", align: "center" },
-      // { text: "مرتجع", value: "mortgaa", align: "center" },
-      // { text: "مشتريات", value: "moshtryat", align: "center" },
-      // { text: "دفعات واردة", value: "dofaatWareda", align: "center" },
       { text: "التحكم", value: "action", sortable: false }
     ]
   }),
@@ -445,14 +416,10 @@ export default {
       this.showMsgSuc = false;
       this.showMsg = false;
       this.msgAlert = false;
-    }, 8000);
+    }, 5000);
   },
   watch: {
     pickerStart() {
-      // this.pickerStartStemp = Date.parse(this.pickerStart);
-
-      // this.pickerEndStemp = Date.parse(this.pickerEnd);
-
       this.pickerStartStemp = Date.parse(`${this.pickerStart} 00:00:00 `);
       // console.log(this.pickerStartStemp);
       this.pickerEndStemp = Date.parse(`${this.pickerEnd} 23:59:59`);
@@ -464,9 +431,6 @@ export default {
       this.$store.dispatch("loadFullReport", payload);
     },
     pickerEnd() {
-      // this.pickerStartStemp = Date.parse(this.pickerStart);
-
-      // this.pickerEndStemp = Date.parse(this.pickerEnd);
       this.pickerStartStemp = Date.parse(`${this.pickerStart} 00:00:00 `);
       this.pickerEndStemp = Date.parse(`${this.pickerEnd} 23:59:59`);
       // console.log(this.pickerStartStemp);
@@ -560,7 +524,7 @@ export default {
     },
     deleteItem(item) {
       var validate = prompt("  هل أنت متاكد من الحذف؟ ادخل كلمة السر");
-      if (validate == sessionStorage.getItem("password")) {
+      if (validate == window.sessionStorage.getItem("password")) {
         this.editedIndexOrder = this.fullReport.indexOf(item);
         this.order = Object.assign({}, item);
         Axios({

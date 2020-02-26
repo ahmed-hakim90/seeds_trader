@@ -122,15 +122,14 @@
         <v-dialog v-model="dialogFormClient" persistent max-width="600px">
           <v-card class="text-center add-client">
             <div class="overlay"></div>
+            <v-alert type="error" v-if="showMsg">
+              برجاء ادخل البيانات كاملة
+            </v-alert>
             <v-form ref="form">
               <v-card-title>
                 <span class="headline">اضافة عميل جديد</span>
               </v-card-title>
               <v-card-text>
-                <v-alert type="error" v-if="showMsg">
-                  برجاء ادخل البيانات كاملة
-                </v-alert>
-
                 <v-container>
                   <v-row class="text-center">
                     <v-col cols="12">
@@ -202,14 +201,14 @@
         <v-dialog v-model="dialogFormSeed" persistent max-width="600px">
           <v-card class="text-center add-client">
             <div class="overlay"></div>
+            <v-alert type="error" v-if="showMsg">
+              برجاء ادخل البيانات كاملة
+            </v-alert>
             <v-form ref="form">
               <v-card-title>
                 <span class="headline">اضافة بذرة جديد</span>
               </v-card-title>
               <v-card-text>
-                <v-alert type="error" v-if="showMsg">
-                  برجاء ادخل البيانات كاملة
-                </v-alert>
                 <v-container>
                   <v-row class="text-center">
                     <v-col cols="12">
@@ -279,27 +278,25 @@
         <v-dialog v-model="dialogForOrder" persistent max-width="800px">
           <v-card class="text-center add-client sell">
             <div class="overlay"></div>
+            <v-alert type="error" v-if="showMsg">
+              {{ msg }}
+            </v-alert>
+
+            <v-alert
+              type="success"
+              color="green"
+              text
+              v-if="showSelect"
+              dismissible
+              transition="scroll-x-reverse-transition"
+            >
+              {{ msg }}
+            </v-alert>
             <v-form ref="form">
               <v-card-title>
                 <span class="headline">عملية {{ Order.type }} </span>
               </v-card-title>
               <v-card-text>
-                <div style="height:56px">
-                  <v-alert type="error" v-if="showMsg">
-                    {{ msg }}
-                  </v-alert>
-
-                  <v-alert
-                    type="success"
-                    color="green"
-                    text
-                    v-if="showSelect"
-                    dismissible
-                    transition="scroll-x-reverse-transition"
-                  >
-                    {{ msg }}
-                  </v-alert>
-                </div>
                 <v-container>
                   <v-row class="text-center">
                     <v-col cols="10">
@@ -515,7 +512,6 @@ export default {
 
   data: () => ({
     passData: null,
-    hideRestore: false,
     restoreBC: "",
     kmaia: null,
     priceBuying: null,
@@ -548,6 +544,8 @@ export default {
     // this is client to assign  data from api
     selling: false,
     buying: false,
+
+    // this is client
     client: {
       name: "",
       phone: "",
@@ -619,12 +617,12 @@ export default {
     }
   }),
   created() {
-    setInterval(() => {
-      this.showMsgSuc = false;
-      this.showMsg = false;
-      this.msgAlert = false;
-      this.showSelect = false;
-    }, 8000);
+    // setInterval(() => {
+    //   this.showMsgSuc = false;
+    //   this.showMsg = false;
+    //   this.msgAlert = false;
+    //   this.showSelect = false;
+    // }, 8000);
     setInterval(() => {
       this.showSelect = false;
     }, 3000);
@@ -681,34 +679,17 @@ export default {
         this.client.type != "" &&
         this.client.balance != ""
       ) {
+        this.$store.dispatch("saveClient", { client: this.client });
         this.isLoadingBtn = true;
-        Axios.post("http://localhost:8087/api/saveClient", this.client)
-          .then(
-            result => {
-              this.response = result.data;
-              this.showMsgSuc = true;
-              this.showOne = false;
-              this.dialogFormClient = false;
-              this.isLoadingBtn = false;
-              this.reset();
-              this.searchclients();
-            },
-            error => {
-              var Console = console;
-
-              Console.error(error);
-              this.isLoadingBtn = false;
-            }
-          )
-          .finally(() => {
-            this.client.name = "";
-            this.client.phone = "";
-            this.client.type = "";
-            this.client.balance = "";
-          });
+        this.showMsgSuc = true;
+        this.showOne = false;
+        this.dialogFormClient = false;
+        this.isLoadingBtn = false;
+        this.searchclients();
       } else {
         this.showMsg = true;
         this.isLoadingBtn = false;
+        this.msg = "برجاء ادخال البيانات كاملة!";
       }
     },
 
@@ -722,30 +703,13 @@ export default {
         this.seed.unit != "" &&
         this.seed.buyingPrice != null
       ) {
-        Axios({
-          method: "POST",
-          url: "http://localhost:8087/api/saveSeed ",
-          data: this.seed,
-          headers: { "content-type": "application/json" }
-        }).then(
-          result => {
-            this.response = result.data;
-            this.seed.name = "";
-            this.seed.sellingPrice = null;
-            this.seed.unit = "";
-            this.seed.buyingPrice = this.isLoading = false;
-            this.showMsgSuc = true;
-            this.showOne = false;
-            this.dialogFormSeed = false;
-            this.isLoadingBtn = false;
-            this.searchseeds();
-          },
-          error => {
-            var Console = console;
-            Console.error(error);
-            this.isLoadingBtn = false;
-          }
-        );
+        this.$store.dispatch("saveSeed", { seed: this.seed });
+        this.isLoading = false;
+        this.showMsgSuc = true;
+        this.showOne = false;
+        this.dialogFormSeed = false;
+        this.isLoadingBtn = false;
+        this.searchseeds();
       } else {
         this.showMsg = true;
         this.isLoadingBtn = false;
@@ -768,10 +732,10 @@ export default {
       this.msg = "تم اختيار العميل";
       //this to hide table after select client in perparing order
     },
+
     // to get seed data in perparing order
     getDataSeed(item) {
       // this to get data selected from api for specific client
-
       this.seedIndex = this.seeds.indexOf(item);
       this.seedSelected = Object.assign({}, item);
       Object.assign(this.seeds[this.seedIndex], this.seedSelected);
@@ -815,32 +779,12 @@ export default {
         this.Order.dofaatWareda = 0;
       }
       if (this.Order.clientName != "" && this.Order.seedName != "") {
-        Axios({
-          method: "POST",
-          url: "http://localhost:8087/api/saveOrder",
-          data: this.Order,
-          headers: { "Content-Type": "application/json" }
-        })
-          .then(
-            result => {
-              this.response = result.data;
-              this.isLoading = false;
-              this.showMsgSuc = true;
-              this.showOne = false;
-              this.dialogForOrder = false;
-              this.reset();
-            },
-            error => {
-              var Console = console;
+        this.$store.dispatch("saveOrder", { Order: this.Order });
 
-              Console.error(error);
-            }
-          )
-          .finally(() => {
-            (this.priceSelling = null),
-              (this.priceBuying = null),
-              (this.Order.moshtryat = null);
-          });
+        this.isLoading = false;
+        this.showMsgSuc = true;
+        this.showOne = false;
+        this.dialogForOrder = false;
       } else {
         this.showMsg = true;
       }
@@ -858,9 +802,6 @@ export default {
       this.dialogFormSeed = true;
       this.showOne = false;
     },
-    dialogFormThree() {
-      this.showTwo = false;
-    },
     dialogFormFour() {
       this.Order.type = "بيع";
       (this.buying = true),
@@ -875,24 +816,7 @@ export default {
         (this.dialogForOrder = true);
       this.showThree = false;
     },
-    showOneMeth() {
-      this.showOne = !this.showOne;
 
-      this.showThree = false;
-      this.showTwo = false;
-    },
-    showTwoMeth() {
-      this.showTwo = !this.showTwo;
-
-      this.showOne = false;
-      this.showThree = false;
-    },
-    showThreeMeth() {
-      this.showThree = !this.showThree;
-
-      this.showOne = false;
-      this.showTwo = false;
-    },
     closeDialogClient() {
       this.dialogFormClient = false;
       this.showMsg = false;
@@ -912,7 +836,6 @@ export default {
         .then(res => {
           this.passData = res.data;
           this.showMsgSuc = true;
-          this.hideRestore = true;
         })
         .catch(err => {
           var Console = console;

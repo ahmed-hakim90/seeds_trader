@@ -1,22 +1,23 @@
 <template>
   <v-container fluid>
+    <v-dialog v-model="loading" max-width="1000">
+      hi
+    </v-dialog>
     <v-row>
       <!-- this is special to print btn -->
       <v-btn id="print-btn" color="#294964" class="mr-4" dark @click="print">
         <v-icon class="ml-2">mdi-printer</v-icon>
         طباعة
       </v-btn>
+      <!-- this is to alert in data not send -->
+      <v-alert type="info" v-if="alartApp">
+        {{ msgAlert }}
+      </v-alert>
+      <!-- when data send  -->
+      <v-alert type="success" v-if="success">
+        {{ msgAlert }}
+      </v-alert>
       <v-col cols="12" class="text-center">
-        <div style="height:56px">
-          <!-- this is to alert in data not send -->
-          <v-alert type="info" text v-if="alartApp">
-            {{ msgAlert }}
-          </v-alert>
-          <!-- when data send  -->
-          <v-alert type="success" text v-if="alartAppSuc">
-            {{ msgAlert }}
-          </v-alert>
-        </div>
         <!-- title page heading -->
         <p class="display-1 line-after">
           كشف حساب عميل
@@ -35,7 +36,6 @@
           item-value="id"
           label="اسم العميل"
           outlined
-          clearable
           return-object
           placeholder="ابحث عن اسم عميل"
           prepend-inner-icon="mdi-account-search"
@@ -456,32 +456,12 @@
                 </td>
 
                 <td>
-                  <!-- <v-text-field
-                    type="number"
-                    hide-details
-                    outlined
-                    v-if="buying"
-                    disabled
-                    dense
-                    v-model="totalCostBuying"
-                  ></v-text-field> -->
-
                   <span v-if="buying">
                     {{ totalCostBuying }}
                   </span>
                   <span v-if="selling">
                     {{ totalCostSelling }}
                   </span>
-
-                  <!-- <v-text-field
-                    type="number"
-                    hide-details
-                    outlined
-                    v-if="selling"
-                    disabled
-                    dense
-                    v-model="totalCostSelling"
-                  ></v-text-field> -->
                 </td>
                 <td>
                   <v-text-field
@@ -496,15 +476,6 @@
                 </td>
                 <td>
                   {{ Order.clientBalance.toLocaleString() }}
-                  <!-- <v-text-field
-                    type="number"
-                    placholder="الرصيد"
-                    outlined
-                    dense
-                    disabled
-                    v-model="Order.clientBalance"
-                    hide-details
-                  ></v-text-field> -->
                 </td>
               </tr>
             </template>
@@ -512,7 +483,7 @@
         </template>
       </v-col>
     </v-row>
-    <div class="not-print">
+    <div class="not-print" v-if="notShow">
       <v-speed-dial
         v-model="fab"
         bottom="bottom"
@@ -539,21 +510,16 @@
         <v-btn @click="closeOrder" fab dark color="red">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-btn @click="sandDataOrder" fab dark color="green">
+        <v-btn
+          :disabled="loading"
+          @click="sandDataOrder"
+          fab
+          dark
+          color="green"
+        >
           <v-icon>mdi-content-save-move</v-icon>
         </v-btn>
       </v-speed-dial>
-      <!-- <v-btn
-        color="green"
-        @click="makeOpenTextArea"
-        dark
-        fixed
-        bottom
-        right
-        fab
-      >
-        <v-icon>mdi-plus</v-icon>
-      </v-btn> -->
     </div>
   </v-container>
 </template>
@@ -564,6 +530,7 @@ import { mapState } from "vuex";
 export default {
   name: "accountclient",
   data: () => ({
+    notShow: false,
     // to select Seed
     selectForSeed: null,
     seedIndex: -1,
@@ -623,17 +590,6 @@ export default {
       moshtryat: 0,
       dofaatWareda: null
     },
-    valueharka: null,
-    harakat: [
-      "دفعات صادرة",
-      "مرتجع",
-      "دفع مباشر",
-      "شيك اجل",
-      "خصم مكتسب",
-      "تحضين",
-      "دفعات واردة",
-      "دفع عن طريق البنك"
-    ],
     typeOrder: ["بيع", "شراء", "غير محدد"],
     selectedClientToAcc: null,
     showPickerStart: false,
@@ -643,8 +599,6 @@ export default {
     pickerStartStemp: 0,
     pickerEndStemp: 0,
     clientIndexToAcc: -1,
-    dialogFormClientGetOrder: false,
-    headersNameAcc: [{ text: "اسم العميل", value: "name" }],
     headersName: [
       { text: "التاريخ ", value: "date", dataType: "Date", align: "center" },
       { text: "الحركة ", value: "haraka", align: "center" },
@@ -666,7 +620,7 @@ export default {
       this.showMsg = false;
       this.alertApp = false;
       this.alartAppSuc = false;
-    }, 8000);
+    }, 6000);
     setTimeout(() => {
       this.searchClientAccount();
       this.searchseeds();
@@ -727,17 +681,12 @@ export default {
     pickerStart() {
       this.alartApp = true;
       this.msgAlert = "برجاء اضغط علي زر العرض لاظهار البيانات الجديدة";
-      this.pickerStartStemp = Date.parse(this.pickerStart);
-
-      this.pickerEndStemp = Date.parse(this.pickerEnd);
       this.pickerStartStemp = Date.parse(`${this.pickerStart} 00:00:00 `);
       this.pickerEndStemp = Date.parse(`${this.pickerEnd} 23:59:59`);
     },
     pickerEnd() {
       this.alartApp = true;
       this.msgAlert = "برجاء اضغط علي زر العرض لاظهار البيانات الجديدة";
-      this.pickerStartStemp = Date.parse(this.pickerStart);
-      this.pickerEndStemp = Date.parse(this.pickerEnd);
       this.pickerStartStemp = Date.parse(`${this.pickerStart} 00:00:00 `);
       this.pickerEndStemp = Date.parse(`${this.pickerEnd} 23:59:59`);
     }
@@ -746,6 +695,12 @@ export default {
     ...mapState(["accClient", "clients", "seeds"]),
     loading() {
       return this.$store.getters.loading;
+    },
+    error() {
+      return this.$store.getters.error;
+    },
+    success() {
+      return this.$store.getters.success;
     },
     totaltahdeen: function() {
       // const sum = 0;
@@ -795,6 +750,7 @@ export default {
     getDataClientToAcc(item) {
       this.alartApp = true;
       this.msgAlert = "برجاء اضغط علي زر العرض لاظهار البيانات الجديدة";
+      this.notShow = true;
       // this to get data selected from api for specific client
       this.clientIndexToAcc = this.clients.indexOf(item);
       this.clientSelectedToAcc = Object.assign({}, item);
@@ -840,7 +796,6 @@ export default {
     showReportClient() {
       // this.balanceOpen = Object.assign({}, -1);
       // Object.assign(this.balanceOpen, this.dataApiFullReport[22]);
-
       if (this.clientSelectedToAcc.id != 0) {
         this.alartAppSuc = true;
         this.alartApp = false;
@@ -859,8 +814,6 @@ export default {
       }
     },
     sandDataOrder() {
-      // console.log(this.Order);
-
       if (this.Order.quantity == "") {
         this.Order.quantity = 0;
       }
@@ -879,34 +832,14 @@ export default {
         this.seed.id != null &&
         this.Order.quantity != null
       ) {
-        //           const OrderX = {
-        //         clientPhone: this.Order.clientPhone,
-        //         clientId: this.Order.clientId,
-        //         clientName: this.Order.clientName,
-        //         clientBalance: this.Order.clientBalance,
-        //         seedName: this.Order.seedName,
-        //         seedId: this.Order.seedId,
-        //         unit: this.Order.unit,
-        //         note: this.Order.note,
-        //         type: this.Order.type,
-        //         quantity: this.Order.quantity,
-        //         sellingPrice: this.Order.sellingPrice,
-        //         buyingPrice: this.Order.buyingPrice,
-        //         unitPrice: this.Order.unitPrice,
-        //         haraka: this.Order.haraka,
-        //         dofaatSadera: this.Order.dofaatSadera,
-        //         tahdeen: this.Order.tahdeen,
-        //         khasmMoktsb: this.Order.khasmMoktsb,
-        //         mortgaa: this.Order.mortgaa,
-        //         moshtryat: this.Order.moshtryat,
-        //         dofaatWareda: this.Order.dofaatWareda
-        //       };
-        // console.log(OrderX)
-        //         // let Order = {
-        //         //   Order: this.Order
-        //         //   /* more parameters */
-        //         // };
-        //         this.$store.dispatch("saveOrder", OrderX);
+        this.$store.dispatch("saveOrder", { Order: this.Order });
+        setTimeout(() => {
+          if (this.$store.getters.success) {
+            this.reset();
+            this.showReportClient();
+          }
+        }, 1250);
+        // this.reset();
       } else {
         this.msgAlert = "برجاء اختيار بذرة";
         this.alartApp = true;
@@ -935,7 +868,7 @@ export default {
       this.priceSelling = null;
       this.Order.unit = "";
       this.Order.note = "";
-      this.Order.type = "";
+      // this.Order.type = "";
       this.Order.quantity = null;
       this.Order.sellingPrice = null;
       this.Order.buyingPrice = null;

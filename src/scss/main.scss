@@ -103,3 +103,11 @@
   width: 100%;
   height: 39rem;
 }
+
+.v-alert.v-sheet.theme--dark {
+  position: absolute;
+  width: 95%;
+  top: 10px;
+  z-index: 1235;
+  margin: 10px auto;
+}

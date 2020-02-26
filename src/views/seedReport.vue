@@ -52,33 +52,6 @@
           </div>
         </template>
       </v-autocomplete>
-      <!-- <v-text-field
-        label=" بحث  عن اسم البذرة "
-        prepend-inner-icon="mdi-seed"
-        outlined
-        v-model="searchSeedAccount"
-      ></v-text-field>
-      <v-data-table
-        v-if="seeds"
-        :search="searchSeedAccount"
-        :headers="headersNameAcc"
-        hide-default-footer
-        hide-default-header
-        :items="seeds"
-        item-key="id"
-        :items-per-page="5"
-        selectable-key
-        class="elevation-9 "
-      >
-        <template v-slot:no-results>
-          لا يوجد بيانات
-        </template>
-        <template v-slot:item="{ item }">
-          <td @click="getDataSeedToAcc(item)">
-            <v-icon>mdi-seed</v-icon>{{ item.name }}
-          </td>
-        </template>
-      </v-data-table> -->
     </v-col>
     <v-col cols="3" class="not-print">
       <v-menu
@@ -171,11 +144,6 @@
                   اجمالي حركة و رصيد
                 </caption> -->
                 <tbody>
-                  <!-- <tr class="title font-weight-bold">
-                    <td colspan="">مدين</td>
-
-                    <td colspan="">دائن</td>
-                  </tr> -->
                   <tr>
                     <th rowspan="1">
                       اجمالي الكمية المباعة في كل الفترات
@@ -288,12 +256,6 @@ export default {
       { text: "سعر البيع", value: "buyingPrice", align: "center" },
       { text: "مدين", value: "dayen", align: "center" },
       { text: "دائن", value: "maden", align: "center" }
-      // { text: "دفعات صادرة", value: "dofaatSadera", align: "center" },
-      // { text: "تحضين", value: "tahdeen" },
-      // { text: "خصم مكتسب", value: "khasmMoktsb", align: "center" },
-      // { text: "مرتجع", value: "mortgaa", align: "center" },
-      // { text: "مشتريات", value: "moshtryat", align: "center" },
-      // { text: "دفعات واردة", value: "dofaatWareda", align: "center" }
     ]
   }),
   created() {
@@ -315,17 +277,12 @@ export default {
     pickerStart() {
       this.alartApp = true;
       this.msgAlert = "برجاء اضغط علي زر العرض لاظهار البيانات الجديدة";
-      this.pickerStartStemp = Date.parse(this.pickerStart);
-
-      this.pickerEndStemp = Date.parse(this.pickerEnd);
       this.pickerStartStemp = Date.parse(`${this.pickerStart} 00:00:00 `);
       this.pickerEndStemp = Date.parse(`${this.pickerEnd} 23:59:59`);
     },
     pickerEnd() {
       this.alartApp = true;
       this.msgAlert = "برجاء اضغط علي زر العرض لاظهار البيانات الجديدة";
-      this.pickerStartStemp = Date.parse(this.pickerStart);
-      this.pickerEndStemp = Date.parse(this.pickerEnd);
       this.pickerStartStemp = Date.parse(`${this.pickerStart} 00:00:00 `);
       this.pickerEndStemp = Date.parse(`${this.pickerEnd} 23:59:59`);
     }
@@ -341,39 +298,6 @@ export default {
         ? this.pickerEnd.format("dd, MMM  YYYY 00:01:00 UTC")
         : "";
     },
-    totaltahdeen: function() {
-      // const sum = 0;
-      return this.reportSeed.reduce((sum = 0, item) => sum + item.tahdeen, 0);
-    },
-    totaldofaatSadera: function() {
-      // const sum = 0;
-      return this.reportSeed.reduce(
-        (sum = 0, item) => sum + item.dofaatSadera,
-        0
-      );
-    },
-    totalkhasmMoktsb: function() {
-      // const sum = 0;
-      return this.reportSeed.reduce(
-        (sum = 0, item) => sum + item.khasmMoktsb,
-        0
-      );
-    },
-    totalmortgaa: function() {
-      // const sum = 0;
-      return this.reportSeed.reduce((sum = 0, item) => sum + item.mortgaa, 0);
-    },
-    totalmoshtryat: function() {
-      // const sum = 0;
-      return this.reportSeed.reduce((sum = 0, item) => sum + item.moshtryat, 0);
-    },
-    totaldofaatWareda: function() {
-      // const sum = 0;
-      return this.reportSeed.reduce(
-        (sum = 0, item) => sum + item.dofaatWareda,
-        0
-      );
-    },
     //  to get data from api  with vuex |||||||||||||||||||||||||||||||||||||||||||
     ...mapState(["seeds", "reportSeed"])
   },
@@ -386,8 +310,6 @@ export default {
       this.$store.dispatch("loadSeeds");
     },
     getDataSeedToAcc(item) {
-      this.alartApp = true;
-      this.msgAlert = "برجاء اضغط علي زر العرض لاظهار البيانات الجديدة";
       // this to get data selected from api for specific client
       this.seedIndexToAcc = this.seeds.indexOf(item);
       this.seedSelectedToAcc = Object.assign({}, item);
