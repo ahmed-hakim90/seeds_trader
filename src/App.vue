@@ -36,6 +36,8 @@
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
+        <!-- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||   -->
         <v-list-item @click="dialogFormOne">
           <v-list-item-icon>
             <v-icon>mdi-account-multiple-plus</v-icon>
@@ -516,12 +518,10 @@ export default {
     kmaia: null,
     priceBuying: null,
     priceSelling: null,
-    msgAlert: "",
     showMsg: false,
     showMsgSuc: false,
     authSignout: false,
     showOne: false,
-    showTwo: false,
     showThree: false,
     dialogFormClient: false,
     dialogFormSeed: false,
@@ -537,14 +537,10 @@ export default {
     // to select seed
     showSelect: false,
     selectForSeed: null,
-    // searchseeds: "",
-    // clients: null,
-    // seeds: null,
     seedIndex: -1,
     // this is client to assign  data from api
     selling: false,
     buying: false,
-
     // this is client
     client: {
       name: "",
@@ -588,14 +584,24 @@ export default {
       {
         title: "الصفحة الرئيسية",
         icon: "mdi-home-city-outline",
-        show: false,
         link: "/"
       },
-      { title: "المخزن", icon: "mdi-cactus", show: false, link: "/seeds" }
-    ],
-    // this is header for table in search to perparing order
-    headersName: [
-      { text: "اسم ", value: "name", align: "right", sortable: false }
+      { title: "المخزن", icon: "mdi-cactus", link: "/seeds" },
+      {
+        title: " تقرير شامل",
+        icon: "mdi-file-chart",
+        link: "/fullReport"
+      },
+      {
+        title: "كشف حساب",
+        icon: "mdi-feature-search",
+        link: "/accountclient"
+      },
+      {
+        title: "تقرير بذرة",
+        icon: "mdi-seed",
+        link: "/seedReport"
+      }
     ],
     // to assign client selected = for client in order
     clientSelected: {
@@ -606,7 +612,6 @@ export default {
       phone: ""
     },
     // to assign seed selected = for seed in order
-
     seedSelected: {
       name: "",
       unit: "",
@@ -617,12 +622,12 @@ export default {
     }
   }),
   created() {
-    // setInterval(() => {
-    //   this.showMsgSuc = false;
-    //   this.showMsg = false;
-    //   this.msgAlert = false;
-    //   this.showSelect = false;
-    // }, 8000);
+    setInterval(() => {
+      this.showMsgSuc = false;
+      this.showMsg = false;
+      this.msgAlert = false;
+      this.showSelect = false;
+    }, 8000);
     setInterval(() => {
       this.showSelect = false;
     }, 3000);
@@ -661,7 +666,6 @@ export default {
       this.Order.quantity = this.kmaia;
       this.Order.buyingPrice = this.priceBuying;
     }
-    //this to sign in app
   },
 
   methods: {
@@ -692,7 +696,6 @@ export default {
         this.msg = "برجاء ادخال البيانات كاملة!";
       }
     },
-
     // this is to send data  seed in api for save in DB
 
     sandDataSeed() {
