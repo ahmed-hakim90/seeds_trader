@@ -40,7 +40,7 @@
           placeholder="ابحث عن اسم عميل"
           prepend-inner-icon="mdi-account-search"
         >
-          <template v-slot:item="{ item, index }">
+          <template v-slot:item="{ item }">
             <div
               class="v-list-item v-list-item--link theme--light"
               @click="getDataClientToAcc(item)"
@@ -329,7 +329,7 @@
             <template v-slot:item.clientBalance="{ item }">
               <span>{{ item.clientBalance.toLocaleString() }}</span>
             </template>
-            <template v-if="addOrder" v-slot:body.prepend="{ items }">
+            <template v-if="addOrder" v-slot:body.prepend="{ item }">
               <tr class="input-add-order not-print">
                 <!-- <td style="font-size:10px;color:green">
                   غير قابل للاضافة
@@ -372,7 +372,7 @@
                     prepend-inner-icon="mdi-seed"
                     return-object
                   >
-                    <template v-slot:item="{ item, index }">
+                    <template v-slot:item="{ item }">
                       <div
                         class="v-list-item v-list-item--link theme--light"
                         @click="getDataSeed(item)"
@@ -399,6 +399,7 @@
                     hide-details
                     outlined
                     v-model="kmaia"
+                    :error="hasQuNot"
                     dense
                   ></v-text-field>
                 </td>
@@ -463,7 +464,7 @@
                     {{ totalCostSelling }}
                   </span>
                 </td>
-                <td>
+                <!-- <td>
                   <v-text-field
                     type="text"
                     label=" ملحوظة"
@@ -473,7 +474,7 @@
                     dense
                     v-model="Order.note"
                   ></v-text-field>
-                </td>
+                </td> -->
                 <td>
                   {{ Order.clientBalance.toLocaleString() }}
                 </td>
@@ -531,6 +532,7 @@ export default {
   name: "accountclient",
   data: () => ({
     notShow: false,
+    hasQuNot: false,
     // to select Seed
     selectForSeed: null,
     seedIndex: -1,
@@ -610,7 +612,7 @@ export default {
       { text: "دائن ", value: "dayen", align: "center" },
       { text: "مدين", value: "maden", align: "center" },
       { text: "تكلفة الطلب", value: "moshtryat", align: "center" },
-      { text: "ملاحظات ", value: "note", align: "center" },
+      // { text: "ملاحظات ", value: "note", align: "center" },
       { text: "رصيد ", value: "clientBalance", align: "center" }
     ]
   }),
@@ -644,6 +646,14 @@ export default {
       this.Order.buyingPrice = this.priceBuying;
       this.totalCostBuying = this.kmaia * this.priceBuying;
       // console.log(this.Order);
+
+      if (this.Order.type == "بيع") {
+        if (this.kmaia > this.seed.quantity) {
+          this.hasQuNot = true;
+        } else {
+          this.hasQuNot = false;
+        }
+      }
     },
 
     // this to watch input if change  and change in input moshtryat
@@ -792,6 +802,13 @@ export default {
       //this to hide table after select client in perparing order
       this.showSelect = true;
       this.msg = "تم اختيار البذرة";
+      if (this.Order.type == "بيع") {
+        if (this.seed.quantity == 0) {
+          this.hasQuNot = true;
+          this.alartApp = true;
+          this.msgAlert = "قم بشراء البذرة اولاً لان لا يوجد كمية متوفرة";
+        }
+      }
     },
     showReportClient() {
       // this.balanceOpen = Object.assign({}, -1);

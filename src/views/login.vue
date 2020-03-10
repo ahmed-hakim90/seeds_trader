@@ -11,7 +11,6 @@
       <v-col cols="4">
         <v-btn
           color="info darken-1"
-          min-width="130"
           class="d-flex justify-start"
           height="50"
           @click="restoreBCApi"
@@ -21,7 +20,7 @@
       <!-- <v-card-title>
                   <span class="headline title"> نماء للبذور</span>
                 </v-card-title> -->
-      <v-card max-width="500" class="text-center login">
+      <v-card class="text-center login">
         <v-card-title>
           <p class="headline">
             <v-icon color="#fff" large>
@@ -30,11 +29,11 @@
             تسجيل دخول
           </p>
         </v-card-title>
-        <div style="height:56px">
-          <v-alert type="error" text v-if="error">
-            {{ error }}
-          </v-alert>
-        </div>
+
+        <v-alert type="error" text v-if="error">
+          {{ error }}
+        </v-alert>
+
         <v-card-text>
           <v-container>
             <v-row class="text-center">

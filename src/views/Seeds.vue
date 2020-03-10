@@ -151,8 +151,9 @@ export default {
     },
     defaultItem: null,
     headersName: [
-      { text: "كود", value: "id" },
+      // { text: "كود", value: "id" },
       { text: "اسم ", value: "name" },
+      { text: "الوحدة ", value: "unit" },
       { text: " الكمية الحالية", value: "quantity" },
       { text: "الكمية المباعة", value: "soldQuantity" },
       { text: "سعر شراء", value: "sellingPrice" },
@@ -189,6 +190,15 @@ export default {
       this.seed = Object.assign({}, item);
       this.defaultItem = Object.assign({}, item);
       this.dialog = true;
+      // Axios({
+      //     method: "PUT",
+      //     url: `http://localhost:8087/api/updateSeedById/${this.seed.id}/${this.seed}`,
+      //     headers: { "content-type": "application/JSON" }
+      //   })
+      //   .then(() => {
+      //       this.showMsgSuc = true;
+      //       this.msg = "تم التعديل بنجاح";
+      //     })
     },
     deleteItem(item) {
       var validate = prompt("  هل أنت متاكد من الحذف؟ ادخل كلمة السر");

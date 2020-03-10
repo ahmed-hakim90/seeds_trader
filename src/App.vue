@@ -319,7 +319,7 @@
                         prepend-inner-icon="mdi-account-search"
                         return-object
                       >
-                        <template v-slot:item="{ item, index }">
+                        <template v-slot:item="{ item }">
                           <div
                             class="v-list-item v-list-item--link theme--light"
                             @click="getDataClient(item)"
@@ -353,7 +353,7 @@
                           prepend-inner-icon="mdi-seed"
                           return-object
                         >
-                          <template v-slot:item="{ item, index }">
+                          <template v-slot:item="{ item }">
                             <div
                               class="v-list-item v-list-item--link theme--light"
                               @click="getDataSeed(item)"
@@ -521,7 +521,6 @@ export default {
     showMsg: false,
     showMsgSuc: false,
     authSignout: false,
-    showOne: false,
     showThree: false,
     dialogFormClient: false,
     dialogFormSeed: false,
@@ -686,10 +685,19 @@ export default {
         this.$store.dispatch("saveClient", { client: this.client });
         this.isLoadingBtn = true;
         this.showMsgSuc = true;
-        this.showOne = false;
-        this.dialogFormClient = false;
-        this.isLoadingBtn = false;
+        // this.dialogFormClient = false;
         this.searchclients();
+        setTimeout(() => {
+          if (this.$store.getters.success) {
+            this.reset();
+            this.isLoading = true;
+            this.isLoadingBtn = false;
+            this.searchclients();
+          } else {
+            this.showMsg = true;
+            this.msg = "يوجد غلط!";
+          }
+        }, 1250);
       } else {
         this.showMsg = true;
         this.isLoadingBtn = false;
@@ -708,11 +716,16 @@ export default {
       ) {
         this.$store.dispatch("saveSeed", { seed: this.seed });
         this.isLoading = false;
-        this.showMsgSuc = true;
-        this.showOne = false;
-        this.dialogFormSeed = false;
-        this.isLoadingBtn = false;
         this.searchseeds();
+
+        setTimeout(() => {
+          if (this.$store.getters.success) {
+            this.reset();
+            this.isLoading = true;
+            this.isLoadingBtn = false;
+            this.searchseeds();
+          }
+        }, 1250);
       } else {
         this.showMsg = true;
         this.isLoadingBtn = false;
@@ -786,8 +799,15 @@ export default {
 
         this.isLoading = false;
         this.showMsgSuc = true;
-        this.showOne = false;
-        this.dialogForOrder = false;
+        // this.dialogForOrder = false;
+        setTimeout(() => {
+          if (this.$store.getters.success) {
+            this.reset();
+            this.isLoading = true;
+            this.isLoadingBtn = false;
+            this.searchseeds();
+          }
+        }, 1250);
       } else {
         this.showMsg = true;
       }
@@ -799,11 +819,9 @@ export default {
     },
     dialogFormOne() {
       this.dialogFormClient = true;
-      this.showOne = false;
     },
     dialogFormTwo() {
       this.dialogFormSeed = true;
-      this.showOne = false;
     },
     dialogFormFour() {
       this.Order.type = "بيع";

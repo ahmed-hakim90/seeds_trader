@@ -32,7 +32,7 @@
         prepend-inner-icon="mdi-seed"
         return-object
       >
-        <template v-slot:item="{ item, index }">
+        <template v-slot:item="{ item }">
           <div
             class="v-list-item v-list-item--link theme--light"
             @click="getDataSeedToAcc(item)"
@@ -151,6 +151,9 @@
                     <th class="p-2">
                       اجمالي الكمية الحالية
                     </th>
+                    <th class="p-2">
+                      اجمالي الكمية المشترى
+                    </th>
                   </tr>
                   <tr v-if="reportSeed">
                     <td>
@@ -158,6 +161,9 @@
                     </td>
                     <td>
                       {{ seed.quantity }}
+                    </td>
+                    <td>
+                      {{ seed.boughtQuantity }}
                     </td>
                   </tr>
                 </tbody>
@@ -181,7 +187,7 @@
           :search="searchSeed"
           :headers="headersName"
           :items="reportSeed"
-          :items-per-page="9"
+          :items-per-page="50"
           class="elevation-9"
         >
           <template v-slot:no-results>
@@ -224,7 +230,8 @@ export default {
       unit: "",
       quantity: "",
       sellingPrice: "",
-      buyingPrice: ""
+      buyingPrice: "",
+      boughtQuantity: ""
     },
     seed: {
       id: 0,
@@ -233,7 +240,8 @@ export default {
       quantity: "",
       soldQuantity: null,
       sellingPrice: "",
-      buyingPrice: ""
+      buyingPrice: "",
+      boughtQuantity: ""
     },
 
     showPickerStart: false,
@@ -321,6 +329,7 @@ export default {
       this.seed.unit = this.seedSelectedToAcc.unit;
       this.seed.quantity = this.seedSelectedToAcc.quantity;
       this.seed.soldQuantity = this.seedSelectedToAcc.soldQuantity;
+      this.seed.boughtQuantity = this.seedSelectedToAcc.boughtQuantity;
       // this to assign  variables  from get api to vars to post api
       //this to hide table after select client in perparing order
     },

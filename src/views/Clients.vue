@@ -157,7 +157,7 @@ export default {
     },
     defaultItem: null,
     headersName: [
-      { text: "الكود", value: "id", align: "right" },
+      // { text: "الكود", value: "id", align: "right" },
       { text: "اسم ", value: "name", align: "right" },
       { text: "رقم التلفون ", value: "phone", align: "center" },
       { text: "رصيد", value: "balance", align: "center" },
@@ -195,6 +195,14 @@ export default {
       this.client = Object.assign({}, item);
       this.defaultItem = Object.assign({}, item);
       this.dialog = true;
+      Axios({
+        method: "PUT",
+        url: `http://localhost:8087/api/updateClientById/${this.client.id}/${this.client}`,
+        headers: { "content-type": "application/JSON" }
+      }).then(() => {
+        this.showMsgSuc = true;
+        this.msg = "تم التعديل بنجاح";
+      });
     },
     deleteItem(item) {
       var validate = prompt("  هل أنت متاكد من الحذف؟ ادخل كلمة السر");
@@ -230,26 +238,23 @@ export default {
       }, 300);
     },
     save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.clients[this.editedIndex], this.client);
-        Axios({
-          method: "PUT",
-          url: `http://localhost:8087/api/updateClientById/${this.client.id}`,
-          // data: this.client,
-          headers: { "content-type": "application/JSON" }
+      Object.assign(this.clients[this.editedIndex], this.client);
+      Axios({
+        method: "PUT",
+        url: `http://localhost:8087/api/updateClientById/${this.client.id}`,
+        data: this.client,
+        headers: { "content-type": "application/JSON" }
+      })
+        // Axios.post(`http://localhost:8087/api/updateClientByID`)
+        .then(() => {
+          this.showMsgSuc = true;
+          this.msg = "تم التعديل بنجاح";
         })
-          // Axios.post(`http://localhost:8087/api/updateClientByID`)
-          .then(() => {
-            this.showMsgSuc = true;
-            this.msg = "تم التعديل بنجاح";
-          })
-          .catch(err => {
-            var Console = console;
-            Console.log(err);
-          });
-      } else {
-        this.clients.push(this.editedItem);
-      }
+        .catch(err => {
+          var Console = console;
+          Console.log(err);
+        });
+
       this.close();
     },
 

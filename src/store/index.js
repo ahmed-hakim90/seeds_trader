@@ -5,7 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    token: localStorage.getItem("password") || "",
+    // token: localStorage.getItem("password") || "",
     login: false,
     error: null,
     success: null,
@@ -169,9 +169,11 @@ export default new Vuex.Store({
         headers: { "Content-Type": "application/json" }
       }).then(
         result => {
-          this.response = result.data;
-          commit("CLEAR_ERROR", true);
-          commit("SET_SUCCESS", true);
+          this.response = result.status;
+          if (this.response == 200) {
+            commit("CLEAR_ERROR", true);
+            commit("SET_SUCCESS", true);
+          }
           // commit("loadAccountClient");
         },
         error => {
