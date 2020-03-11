@@ -156,6 +156,7 @@ export default {
       { text: "الوحدة ", value: "unit" },
       { text: " الكمية الحالية", value: "quantity" },
       { text: "الكمية المباعة", value: "soldQuantity" },
+       { text: "الكمية المشترى", value: "boughtQuantity" },
       { text: "سعر شراء", value: "sellingPrice" },
       { text: "سعر بيع", value: "buyingPrice" },
       { text: "التحكم", value: "action", sortable: false }

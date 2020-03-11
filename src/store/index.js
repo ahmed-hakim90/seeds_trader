@@ -170,17 +170,17 @@ export default new Vuex.Store({
       }).then(
         result => {
           this.response = result.status;
-          if (this.response == 200) {
+         
             commit("CLEAR_ERROR", true);
             commit("SET_SUCCESS", true);
-          }
+          
           // commit("loadAccountClient");
         },
         error => {
           var Console = console;
           Console.error(error);
         }
-      );
+      )
     },
     saveClient({ commit }, { client }) {
       Axios({
@@ -199,7 +199,14 @@ export default new Vuex.Store({
           var Console = console;
           Console.error(error);
         }
-      );
+      ).finally(() => {
+        setTimeout(() => {
+          commit("SET_SUCCESS", false);
+        }, 2200);
+
+        commit("SET_LOADING", false);
+      });
+  
     },
     //  to login from axios and save in session
     loginVuex({ commit }, payload) {

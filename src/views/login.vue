@@ -84,13 +84,17 @@ export default {
     showMsg: false,
     msg: "",
     showMsgSuc: false,
-    hideRestore: false,
     password: "",
     restoreBC: "",
     authLogin: true,
     loginApi: null
   }),
   created() {
+    setInterval(() => {
+      this.showMsgSuc = false;
+      this.showMsg = false;
+     
+    }, 5000);
     if (sessionStorage.getItem("password") !== null || undefined) {
       // this.password == sessionStorage.getItem("password");
       this.$store.dispatch("autoLogin");

@@ -156,10 +156,10 @@
                 اجمالي حركة و رصيد
               </caption> -->
                   <tbody>
-                    <tr class="title font-weight-bold">
+                    <!-- <tr class="title font-weight-bold">
                       <td colspan="4">دائن</td>
                       <td colspan="2">مدين</td>
-                    </tr>
+                    </tr> -->
 
                     <tr>
                       <th class="p-2">
@@ -175,7 +175,7 @@
                         مرتجع
                       </th>
                       <th class="p-2">
-                        مشتريات
+                           مبيعات
                       </th>
                       <th rowspan="1">
                         دفعات صادرة
@@ -210,41 +210,42 @@
               >
                 <table>
                   <tbody>
-                    <tr class="title font-weight-bold">
+                    <!-- <tr class="title font-weight-bold">
                       <td colspan="2">دائن</td>
                       <td colspan="2">مدين</td>
-                    </tr>
+                    </tr> -->
 
                     <tr>
-                      <th class="p-2">
-                        دفعات واردة
-                      </th>
-                      <th class="p-2">
-                        مشتريات
-                      </th>
                       <th rowspan="1">
                         دفعات صادرة
                       </th>
                       <th
                         class="p-2"
-                        v-if="(clientSelectedToAcc.type = 'مورد')"
+                      
                       >
                         خصم مكتسب
                       </th>
+                      <th class="p-2">
+                        دفعات واردة
+                      </th>
+
+                      <th class="p-2">
+                           مبيعات
+                      </th>
                     </tr>
                     <tr v-if="accClient">
+                      <th rowspan="1">
+                        {{ totaldofaatSadera.toLocaleString() }}
+                      </th>
+                      <th class="p-2">
+                        {{ totalkhasmMoktsb.toLocaleString() }}
+                      </th>
                       <th class="p-2">
                         {{ totaldofaatWareda.toLocaleString() }}
                       </th>
 
                       <th class="p-2">
                         {{ totalmoshtryat.toLocaleString() }}
-                      </th>
-                      <th rowspan="1">
-                        {{ totaldofaatSadera.toLocaleString() }}
-                      </th>
-                      <th class="p-2">
-                        {{ totalkhasmMoktsb.toLocaleString() }}
                       </th>
                     </tr>
                   </tbody>
@@ -329,7 +330,7 @@
             <template v-slot:item.clientBalance="{ item }">
               <span>{{ item.clientBalance.toLocaleString() }}</span>
             </template>
-            <template v-if="addOrder" v-slot:body.prepend="{ item }">
+            <template v-if="addOrder" v-slot:body.prepend="{ items }">
               <tr class="input-add-order not-print">
                 <!-- <td style="font-size:10px;color:green">
                   غير قابل للاضافة
@@ -653,6 +654,8 @@ export default {
         } else {
           this.hasQuNot = false;
         }
+      } else {
+         this.hasQuNot = false;
       }
     },
 
@@ -682,6 +685,8 @@ export default {
         this.Order.type = this.typeOrderWatch;
         this.selling = false;
         this.buying = true;
+         this.hasQuNot = false;
+          this.alartApp = false;
         // console.log(this.Order.type);
       } else {
         this.Order.type = this.typeOrderWatch;
@@ -758,8 +763,8 @@ export default {
       this.$store.dispatch("loadClients");
     },
     getDataClientToAcc(item) {
-      this.alartApp = true;
-      this.msgAlert = "برجاء اضغط علي زر العرض لاظهار البيانات الجديدة";
+      // this.alartApp = true;
+      // this.msgAlert = "برجاء اضغط علي زر العرض لاظهار البيانات الجديدة";
       this.notShow = true;
       // this to get data selected from api for specific client
       this.clientIndexToAcc = this.clients.indexOf(item);
@@ -800,23 +805,29 @@ export default {
       this.Order.buyingPrice = this.seed.buyingPrice;
       this.Order.seedId = this.seed.id;
       //this to hide table after select client in perparing order
-      this.showSelect = true;
-      this.msg = "تم اختيار البذرة";
+      // this.showSelect = true;
+      // this.msg = "تم اختيار البذرة";
       if (this.Order.type == "بيع") {
         if (this.seed.quantity == 0) {
           this.hasQuNot = true;
           this.alartApp = true;
           this.msgAlert = "قم بشراء البذرة اولاً لان لا يوجد كمية متوفرة";
+        }else{
+          this.hasQuNot = false;
+          this.alartApp = false;
         }
+      }else{
+         this.hasQuNot = false;
+          this.alartApp = false;  
       }
     },
     showReportClient() {
       // this.balanceOpen = Object.assign({}, -1);
       // Object.assign(this.balanceOpen, this.dataApiFullReport[22]);
       if (this.clientSelectedToAcc.id != 0) {
+        this.msgAlert = "تم تحديث البيانات";
         this.alartAppSuc = true;
         this.alartApp = false;
-        this.msgAlert = "تم تحديث البيانات";
         this.afterSelect = true;
         let payload = {
           id: this.clientSelectedToAcc.id,
@@ -826,8 +837,8 @@ export default {
         };
         this.$store.dispatch("loadAccountClient", payload);
       } else {
-        this.alartApp = true;
         this.msgAlert = "برجاء اختيار العميل!!";
+        this.alartApp = true;
       }
     },
     sandDataOrder() {
@@ -849,11 +860,15 @@ export default {
         this.seed.id != null &&
         this.Order.quantity != null
       ) {
-        this.$store.dispatch("saveOrder", { Order: this.Order });
+        if(!this.hasQuNot){
+
+          this.$store.dispatch("saveOrder", { Order: this.Order });
+        }
         setTimeout(() => {
           if (this.$store.getters.success) {
             this.reset();
             this.showReportClient();
+            this.$store.getters.success= false;
           }
         }, 1250);
         // this.reset();
@@ -875,9 +890,10 @@ export default {
       }
     },
     reset() {
-      this.Order.seedName = null;
       this.seed.name = null;
       this.seed.id = null;
+      this.Order.seedId = null;
+      this.Order.seedName = null;
       this.Order.dofaatSadera = null;
       this.warda = null;
       this.kmaia = null;
@@ -885,7 +901,7 @@ export default {
       this.priceSelling = null;
       this.Order.unit = "";
       this.Order.note = "";
-      // this.Order.type = "";
+      this.typeOrderWatch = null;
       this.Order.quantity = null;
       this.Order.sellingPrice = null;
       this.Order.buyingPrice = null;
@@ -898,8 +914,8 @@ export default {
       this.Order.dofaatWareda = null;
     },
     closeOrder() {
-      this.addOrder = false;
       this.reset();
+      this.addOrder = false;
     }
   }
 };

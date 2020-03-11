@@ -148,6 +148,7 @@
                         v-model="client.phone"
                         label="رقم التلفون*"
                         required
+                        type="number"
                         dark
                         outlined
                       ></v-text-field>
@@ -266,7 +267,7 @@
                 <v-btn
                   color="red darken-1"
                   height="50"
-                  @click="dialogFormSeed = false"
+                  @click="closeDialogSeed"
                   >الغاء</v-btn
                 >
               </v-card-actions>
@@ -485,6 +486,7 @@
                   color="blue darken-1"
                   min-width="130"
                   height="50"
+                  :disabled="isLoadingBtn"
                   @click="sandDataOrder"
                   >حفظ</v-btn
                 >
@@ -638,6 +640,10 @@ export default {
     },
     navVisibility() {
       return this.$store.getters.navbar;
+    },
+    success(){
+      return this.$store.getters.success;
+
     }
   },
   watch: {
@@ -689,9 +695,8 @@ export default {
         this.searchclients();
         setTimeout(() => {
           if (this.$store.getters.success) {
-            this.reset();
-            this.isLoading = true;
             this.isLoadingBtn = false;
+            this.reset();
             this.searchclients();
           } else {
             this.showMsg = true;
@@ -715,13 +720,11 @@ export default {
         this.seed.buyingPrice != null
       ) {
         this.$store.dispatch("saveSeed", { seed: this.seed });
-        this.isLoading = false;
         this.searchseeds();
-
+this.isLoadingBtn = true;
         setTimeout(() => {
           if (this.$store.getters.success) {
             this.reset();
-            this.isLoading = true;
             this.isLoadingBtn = false;
             this.searchseeds();
           }
@@ -797,7 +800,6 @@ export default {
       if (this.Order.clientName != "" && this.Order.seedName != "") {
         this.$store.dispatch("saveOrder", { Order: this.Order });
 
-        this.isLoading = false;
         this.showMsgSuc = true;
         // this.dialogForOrder = false;
         setTimeout(() => {
@@ -839,14 +841,22 @@ export default {
     },
 
     closeDialogClient() {
-      this.dialogFormClient = false;
-      this.showMsg = false;
       this.reset();
+       this.isLoadingBtn = false;
+      this.showMsg = false;
+      this.dialogFormClient = false;
+    },
+     closeDialogSeed() {
+      this.reset();
+       this.isLoadingBtn = false;
+      this.showMsg = false;
+      this.dialogFormSeed = false;
     },
     closeDataOrder() {
-      this.dialogForOrder = false;
-      this.showMsg = false;
       this.reset();
+       this.isLoadingBtn = false;
+      this.showMsg = false;
+      this.dialogForOrder = false;
     },
     reset() {
       this.$refs.form.reset();
