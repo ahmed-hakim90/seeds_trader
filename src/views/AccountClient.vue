@@ -31,7 +31,7 @@
           autofocus
           :items="clients"
           color="warning"
-          item-text="name"
+          item-text="[name , type]"
           single-line
           item-value="id"
           label="اسم العميل"
@@ -45,7 +45,7 @@
               class="v-list-item v-list-item--link theme--light"
               @click="getDataClientToAcc(item)"
             >
-              {{ item.name }}
+              {{ item.name }} / {{ item.type }}
             </div>
           </template>
 
@@ -152,18 +152,10 @@
                 v-if="clientSelectedToAcc.type != 'مورد'"
               >
                 <table>
-                  <!-- <caption class="title font-weight-bold">
-                اجمالي حركة و رصيد
-              </caption> -->
                   <tbody>
-                    <!-- <tr class="title font-weight-bold">
-                      <td colspan="4">دائن</td>
-                      <td colspan="2">مدين</td>
-                    </tr> -->
-
                     <tr>
                       <th class="p-2">
-                        دفعات واردة
+                        دفعات واردة دائن
                       </th>
                       <th class="p-2">
                         تحضين
@@ -175,10 +167,10 @@
                         مرتجع
                       </th>
                       <th class="p-2">
-                           مبيعات
+                        مبيعات
                       </th>
                       <th rowspan="1">
-                        دفعات صادرة
+                        دفعات صادرة مدين
                       </th>
                     </tr>
                     <tr v-if="accClient">
@@ -206,31 +198,23 @@
               </div>
               <div
                 class="left-side-card d-flex justify-end"
-                v-else-if="(clientSelectedToAcc.type = 'مورد')"
+                v-else-if="clientSelectedToAcc.type == 'مورد'"
               >
                 <table>
                   <tbody>
-                    <!-- <tr class="title font-weight-bold">
-                      <td colspan="2">دائن</td>
-                      <td colspan="2">مدين</td>
-                    </tr> -->
-
                     <tr>
                       <th rowspan="1">
-                        دفعات صادرة
+                        دائن دفعات صادرة
                       </th>
-                      <th
-                        class="p-2"
-                      
-                      >
+                      <th class="p-2">
                         خصم مكتسب
                       </th>
                       <th class="p-2">
-                        دفعات واردة
+                        مدين دفعات واردة
                       </th>
 
                       <th class="p-2">
-                           مبيعات
+                        مشتريات
                       </th>
                     </tr>
                     <tr v-if="accClient">
@@ -256,18 +240,22 @@
         </v-card>
       </v-col>
 
-      <v-col cols="12" v-if="!accClient">
-        <v-card class="loader" height="56">
-          <v-alert type="error" text>
+      <v-col cols="12" v-if="!clientSelectedToAcc.id">
+        <v-card class="loader" height="156">
+          <v-alert type="error" style="z-index:1" text>
             برجاء ادخل البيانات لاظهار التقرير
           </v-alert>
         </v-card>
       </v-col>
-      <v-col cols="12" class="show-data-clients">
-        <template v-if="accClient">
+      <v-col
+        cols="12"
+        class="show-data-clients"
+        v-if="clientSelectedToAcc.type == 'مورد'"
+      >
+        <template v-if="clientSelectedToAcc.id">
           <v-data-table
             :search="searchClient"
-            :headers="headersName"
+            :headers="headersNameMo"
             :items="accClient"
             :items-per-page="10"
             class="elevation-9"
@@ -289,39 +277,12 @@
                 (item.moshtryat + item.dofaatWareda).toLocaleString()
               }}</span>
             </template>
-            <template
-              v-if="clientSelectedToAcc.type != 'مورد'"
-              v-slot:item.maden="{ item }"
-            >
-              <span>{{
-                (item.moshtryat + item.dofaatSadera).toLocaleString()
-              }}</span>
-            </template>
-            <template
-              v-else-if="(clientSelectedToAcc.type = 'مورد')"
-              v-slot:item.maden="{ item }"
-            >
+
+            <template v-slot:item.madenMo="{ item }">
               <span>{{ item.dofaatSadera.toLocaleString() }}</span>
             </template>
-            <template
-              v-if="clientSelectedToAcc.type != 'مورد'"
-              v-slot:item.dayen="{ item }"
-            >
-              <span>
-                {{
-                  (
-                    item.tahdeen +
-                    item.dofaatWareda +
-                    item.mortgaa +
-                    item.khasmMoktsb
-                  ).toLocaleString()
-                }}
-              </span>
-            </template>
-            <template
-              v-else-if="(clientSelectedToAcc.type = 'مورد')"
-              v-slot:item.dayen="{ item }"
-            >
+
+            <template v-slot:item.dayenMo="{ item }">
               <span>
                 {{ (item.dofaatWareda + item.moshtryat).toLocaleString() }}
               </span>
@@ -332,9 +293,6 @@
             </template>
             <template v-if="addOrder" v-slot:body.prepend="{ items }">
               <tr class="input-add-order not-print">
-                <!-- <td style="font-size:10px;color:green">
-                  غير قابل للاضافة
-                </td> -->
                 <td>
                   {{ date.toLocaleDateString() }}
                 </td>
@@ -465,17 +423,201 @@
                     {{ totalCostSelling }}
                   </span>
                 </td>
-                <!-- <td>
+
+                <td>
+                  {{ Order.clientBalance.toLocaleString() }}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </template>
+      </v-col>
+
+      <v-col
+        cols="12"
+        class="show-data-clients"
+        v-if="clientSelectedToAcc.type == 'مشتري'"
+      >
+        <template v-if="clientSelectedToAcc.id">
+          <v-data-table
+            :search="searchClient"
+            :headers="headersNameSh"
+            :items="accClient"
+            :items-per-page="10"
+            class="elevation-9"
+            hide-no-results
+            hide-no-data
+          >
+            <template v-slot:no-results>
+              <div class="text-center" style="color: #294964">
+                لا يوجد بيانات مطابقة
+              </div>
+            </template>
+
+            <template v-slot:item.date="{ item }">
+              <span>{{ new Date(item.date).toLocaleDateString() }}</span>
+            </template>
+
+            <template v-slot:item.moshtryat="{ item }">
+              <span>{{
+                (item.moshtryat + item.dofaatWareda).toLocaleString()
+              }}</span>
+            </template>
+            <template v-slot:item.madenSh="{ item }">
+              <span>{{
+                (item.moshtryat + item.dofaatSadera).toLocaleString()
+              }}</span>
+            </template>
+
+            <template v-slot:item.dayenSh="{ item }">
+              <span>
+                {{
+                  (
+                    item.tahdeen +
+                    item.dofaatWareda +
+                    item.mortgaa +
+                    item.khasmMoktsb
+                  ).toLocaleString()
+                }}
+              </span>
+            </template>
+
+            <template v-slot:item.clientBalance="{ item }">
+              <span>{{ item.clientBalance.toLocaleString() }}</span>
+            </template>
+            <template v-if="addOrder" v-slot:body.prepend="{ items }">
+              <tr class="input-add-order not-print">
+                <td>
+                  {{ date.toLocaleDateString() }}
+                </td>
+                <td>
                   <v-text-field
                     type="text"
-                    label=" ملحوظة"
+                    placholder="نوع الحركة"
                     hide-details
                     outlined
-                    clearable
+                    v-model="Order.haraka"
                     dense
-                    v-model="Order.note"
                   ></v-text-field>
-                </td> -->
+                </td>
+                <td>
+                  <v-select
+                    v-model="typeOrderWatch"
+                    :items="typeOrder"
+                    hide-details
+                    outlined
+                    dense
+                  ></v-select>
+                </td>
+                <td>
+                  <v-autocomplete
+                    dense
+                    @click="searchseeds"
+                    v-model="seed.name"
+                    :items="seeds"
+                    color="warning"
+                    item-text="name"
+                    label="اسم البذرة"
+                    outlined
+                    single-line
+                    hide-details
+                    placeholder="بحث البذرة"
+                    prepend-inner-icon="mdi-seed"
+                    return-object
+                  >
+                    <template v-slot:item="{ item }">
+                      <div
+                        class="v-list-item v-list-item--link theme--light"
+                        @click="getDataSeed(item)"
+                      >
+                        {{ item.name }}
+                      </div>
+                    </template>
+
+                    <template v-slot:no-results>
+                      <div class="text-center" style="color: #294964">
+                        لا يوجد بيانات مطابقة
+                      </div>
+                    </template>
+                    <template v-slot:no-data>
+                      <div class="text-center" style="color: #294964">
+                        لا يوجد بيانات
+                      </div>
+                    </template>
+                  </v-autocomplete>
+                </td>
+                <td>
+                  <v-text-field
+                    type="number"
+                    hide-details
+                    outlined
+                    v-model="kmaia"
+                    :error="hasQuNot"
+                    dense
+                  ></v-text-field>
+                </td>
+
+                <td>
+                  <v-text-field
+                    type="text"
+                    label="الوحدة"
+                    hide-details
+                    outlined
+                    dense
+                    clearable
+                    v-model="Order.unit"
+                  ></v-text-field>
+                </td>
+                <td>
+                  <v-text-field
+                    type="number"
+                    placholder="123"
+                    hide-details
+                    v-if="buying"
+                    outlined
+                    v-model="priceBuying"
+                    dense
+                  ></v-text-field>
+                  <v-text-field
+                    v-if="selling"
+                    type="number"
+                    placholder="123"
+                    hide-details
+                    outlined
+                    v-model="priceSelling"
+                    dense
+                  ></v-text-field>
+                </td>
+                <td>
+                  <v-text-field
+                    v-model="Order.dofaatWareda"
+                    type="number"
+                    placholder="123"
+                    hide-details
+                    outlined
+                    dense
+                  ></v-text-field>
+                </td>
+                <td>
+                  <v-text-field
+                    v-model="Order.dofaatSadera"
+                    type="number"
+                    placholder="123"
+                    hide-details
+                    outlined
+                    dense
+                  ></v-text-field>
+                </td>
+
+                <td>
+                  <span v-if="buying">
+                    {{ totalCostBuying }}
+                  </span>
+                  <span v-if="selling">
+                    {{ totalCostSelling }}
+                  </span>
+                </td>
+
                 <td>
                   {{ Order.clientBalance.toLocaleString() }}
                 </td>
@@ -534,6 +676,7 @@ export default {
   data: () => ({
     notShow: false,
     hasQuNot: false,
+    status: "دائن",
     // to select Seed
     selectForSeed: null,
     seedIndex: -1,
@@ -565,7 +708,7 @@ export default {
     searchClient: "",
     select: null,
     clientSelectedToAcc: {
-      id: 0,
+      id: false,
       name: "",
       balance: 0,
       type: "",
@@ -602,7 +745,7 @@ export default {
     pickerStartStemp: 0,
     pickerEndStemp: 0,
     clientIndexToAcc: -1,
-    headersName: [
+    headersNameMo: [
       { text: "التاريخ ", value: "date", dataType: "Date", align: "center" },
       { text: "الحركة ", value: "haraka", align: "center" },
       { text: "نوع الطلب", value: "type", align: "center" },
@@ -610,10 +753,24 @@ export default {
       { text: "الكمية", value: "quantity", align: "center" },
       { text: "الوحدة", value: "unit", align: "center" },
       { text: "سعر ", value: "unitPrice", align: "center" },
-      { text: "دائن ", value: "dayen", align: "center" },
-      { text: "مدين", value: "maden", align: "center" },
+      { text: "  دفعة واردة مدين ", value: "dayenMo", align: "center" },
+      { text: "  دفعة صادرة دائن ", value: "madenMo", align: "center" },
+      //  { text: "دفعة واردة مدين", value: "dayenSh", align: "center" },
+      //  { text: "دفعة صادرة دائن", value: "madenSh", align: "center" },
       { text: "تكلفة الطلب", value: "moshtryat", align: "center" },
-      // { text: "ملاحظات ", value: "note", align: "center" },
+      { text: "رصيد ", value: "clientBalance", align: "center" }
+    ],
+    headersNameSh: [
+      { text: "التاريخ ", value: "date", dataType: "Date", align: "center" },
+      { text: "الحركة ", value: "haraka", align: "center" },
+      { text: "نوع الطلب", value: "type", align: "center" },
+      { text: "اسم البذرة", value: "seedName", align: "center" },
+      { text: "الكمية", value: "quantity", align: "center" },
+      { text: "الوحدة", value: "unit", align: "center" },
+      { text: "سعر ", value: "unitPrice", align: "center" },
+      { text: "دفعة واردة دائن", value: "dayenSh", align: "center" },
+      { text: "دفعة صادرة  مدين", value: "madenSh", align: "center" },
+      { text: "تكلفة الطلب", value: "moshtryat", align: "center" },
       { text: "رصيد ", value: "clientBalance", align: "center" }
     ]
   }),
@@ -655,7 +812,7 @@ export default {
           this.hasQuNot = false;
         }
       } else {
-         this.hasQuNot = false;
+        this.hasQuNot = false;
       }
     },
 
@@ -685,8 +842,8 @@ export default {
         this.Order.type = this.typeOrderWatch;
         this.selling = false;
         this.buying = true;
-         this.hasQuNot = false;
-          this.alartApp = false;
+        this.hasQuNot = false;
+        this.alartApp = false;
         // console.log(this.Order.type);
       } else {
         this.Order.type = this.typeOrderWatch;
@@ -812,13 +969,13 @@ export default {
           this.hasQuNot = true;
           this.alartApp = true;
           this.msgAlert = "قم بشراء البذرة اولاً لان لا يوجد كمية متوفرة";
-        }else{
+        } else {
           this.hasQuNot = false;
           this.alartApp = false;
         }
-      }else{
-         this.hasQuNot = false;
-          this.alartApp = false;  
+      } else {
+        this.hasQuNot = false;
+        this.alartApp = false;
       }
     },
     showReportClient() {
@@ -860,15 +1017,14 @@ export default {
         this.seed.id != null &&
         this.Order.quantity != null
       ) {
-        if(!this.hasQuNot){
-
+        if (!this.hasQuNot) {
           this.$store.dispatch("saveOrder", { Order: this.Order });
         }
         setTimeout(() => {
           if (this.$store.getters.success) {
             this.reset();
             this.showReportClient();
-            this.$store.getters.success= false;
+            this.$store.getters.success = false;
           }
         }, 1250);
         // this.reset();

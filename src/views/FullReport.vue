@@ -223,11 +223,6 @@
                 اجمالي حركة و رصيد
               </caption> -->
                   <tbody>
-                    <tr class="title font-weight-bold">
-                      <td colspan="4">دائن</td>
-                      <td colspan="2">مدين</td>
-                    </tr>
-
                     <tr>
                       <th class="p-2">
                         دفعات واردة

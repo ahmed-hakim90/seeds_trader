@@ -13,12 +13,14 @@
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "axios": "^0.19.2",
     "core-js": "^3.4.4",
+    "grunt": "^1.0.4",
     "moment": "^2.24.0",
     "vue": "^2.6.10",
     "vue-html-to-paper": "^1.3.0",
     "vue-router": "^3.1.6",
     "vuetify": "^2.2.15",
-    "vuex": "^3.1.2"
+    "vuex": "^3.1.2",
+    "fsevents": "^2.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",
@@ -41,8 +43,27 @@
     "sass": "^1.26.2",
     "sass-loader": "^8.0.0",
     "vue-cli-plugin-vuetify": "^2.0.5",
-    "vue-template-compiler": "^2.6.10",
+    "vue-loader": "^15.9.0",
+    "vue-template-compiler": "^2.6.11",
     "vuetify-loader": "^1.3.0",
     "webpack": "^4.42.0"
-  }
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.1.2"
+  },
+  "description": "## Project setup ``` npm install ```",
+  "main": ".eslintrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aihimieid900/seeds_trader.git"
+  },
+  "author": "a",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Aihimieid900/seeds_trader/issues"
+  },
+  "homepage": "https://github.com/Aihimieid900/seeds_trader#readme",
+  "keywords": [
+    "a"
+  ]
 }

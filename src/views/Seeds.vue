@@ -70,6 +70,15 @@
                             v-model="seed.name"
                           ></v-text-field>
                         </v-col>
+                        <v-col cols="12">
+                          <v-text-field
+                            dark
+                            type="number"
+                            outlined
+                            label="    الكمية الحالية"
+                            v-model="seed.quantity"
+                          ></v-text-field>
+                        </v-col>
                         <v-col cols="6">
                           <v-text-field
                             dark
@@ -77,6 +86,16 @@
                             outlined
                             label="    الكمية المباعة"
                             v-model="seed.soldQuantity"
+                          ></v-text-field>
+                        </v-col>
+
+                        <v-col cols="6">
+                          <v-text-field
+                            dark
+                            type="number"
+                            outlined
+                            label="    الكمية المشترى"
+                            v-model="seed.boughtQuantity"
                           ></v-text-field>
                         </v-col>
                         <v-col cols="6">
@@ -156,7 +175,7 @@ export default {
       { text: "الوحدة ", value: "unit" },
       { text: " الكمية الحالية", value: "quantity" },
       { text: "الكمية المباعة", value: "soldQuantity" },
-       { text: "الكمية المشترى", value: "boughtQuantity" },
+      { text: "الكمية المشترى", value: "boughtQuantity" },
       { text: "سعر شراء", value: "sellingPrice" },
       { text: "سعر بيع", value: "buyingPrice" },
       { text: "التحكم", value: "action", sortable: false }

@@ -30,7 +30,7 @@
           </p>
         </v-card-title>
 
-        <v-alert type="error" text v-if="error">
+        <v-alert type="error" v-if="error">
           {{ error }}
         </v-alert>
 
@@ -93,7 +93,6 @@ export default {
     setInterval(() => {
       this.showMsgSuc = false;
       this.showMsg = false;
-     
     }, 5000);
     if (sessionStorage.getItem("password") !== null || undefined) {
       // this.password == sessionStorage.getItem("password");
@@ -137,7 +136,10 @@ export default {
       Axios.get(`http://localhost:8087/api/restoreBackup/${validate}`)
         .then(res => {
           this.passData = res.data;
-          this.showMsgSuc = true;
+          if (res.status == 200) {
+            this.passData = "تم الاستعادة";
+            this.showMsgSuc = true;
+          }
           // this.hideRestore = true;
         })
         .catch(err => {

@@ -170,17 +170,17 @@ export default new Vuex.Store({
       }).then(
         result => {
           this.response = result.status;
-         
-            commit("CLEAR_ERROR", true);
-            commit("SET_SUCCESS", true);
-          
+
+          commit("CLEAR_ERROR", true);
+          commit("SET_SUCCESS", true);
+
           // commit("loadAccountClient");
         },
         error => {
           var Console = console;
           Console.error(error);
         }
-      )
+      );
     },
     saveClient({ commit }, { client }) {
       Axios({
@@ -188,25 +188,26 @@ export default new Vuex.Store({
         url: "http://localhost:8087/api/saveClient",
         data: client,
         headers: { "Content-Type": "application/json" }
-      }).then(
-        result => {
-          this.response = result.data;
-          commit("CLEAR_ERROR", true);
-          commit("SET_SUCCESS", true);
-          // commit("loadAccountClient");
-        },
-        error => {
-          var Console = console;
-          Console.error(error);
-        }
-      ).finally(() => {
-        setTimeout(() => {
-          commit("SET_SUCCESS", false);
-        }, 2200);
+      })
+        .then(
+          result => {
+            this.response = result.data;
+            commit("CLEAR_ERROR", true);
+            commit("SET_SUCCESS", true);
+            // commit("loadAccountClient");
+          },
+          error => {
+            var Console = console;
+            Console.error(error);
+          }
+        )
+        .finally(() => {
+          setTimeout(() => {
+            commit("SET_SUCCESS", false);
+          }, 2200);
 
-        commit("SET_LOADING", false);
-      });
-  
+          commit("SET_LOADING", false);
+        });
     },
     //  to login from axios and save in session
     loginVuex({ commit }, payload) {

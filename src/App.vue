@@ -264,10 +264,7 @@
                   @click="sandDataSeed"
                   >حفظ</v-btn
                 >
-                <v-btn
-                  color="red darken-1"
-                  height="50"
-                  @click="closeDialogSeed"
+                <v-btn color="red darken-1" height="50" @click="closeDialogSeed"
                   >الغاء</v-btn
                 >
               </v-card-actions>
@@ -641,9 +638,8 @@ export default {
     navVisibility() {
       return this.$store.getters.navbar;
     },
-    success(){
+    success() {
       return this.$store.getters.success;
-
     }
   },
   watch: {
@@ -721,7 +717,7 @@ export default {
       ) {
         this.$store.dispatch("saveSeed", { seed: this.seed });
         this.searchseeds();
-this.isLoadingBtn = true;
+        this.isLoadingBtn = true;
         setTimeout(() => {
           if (this.$store.getters.success) {
             this.reset();
@@ -842,19 +838,21 @@ this.isLoadingBtn = true;
 
     closeDialogClient() {
       this.reset();
-       this.isLoadingBtn = false;
+      this.isLoadingBtn = false;
       this.showMsg = false;
-      this.dialogFormClient = false;
+      if (!this.showMsg) {
+        this.dialogFormClient = false;
+      }
     },
-     closeDialogSeed() {
+    closeDialogSeed() {
       this.reset();
-       this.isLoadingBtn = false;
+      this.isLoadingBtn = false;
       this.showMsg = false;
       this.dialogFormSeed = false;
     },
     closeDataOrder() {
       this.reset();
-       this.isLoadingBtn = false;
+      this.isLoadingBtn = false;
       this.showMsg = false;
       this.dialogForOrder = false;
     },
