@@ -13,14 +13,15 @@
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "axios": "^0.19.2",
     "core-js": "^3.4.4",
+    "fsevents": "^2.1.2",
     "grunt": "^1.0.4",
     "moment": "^2.24.0",
+    "npm": "^6.14.3",
     "vue": "^2.6.10",
     "vue-html-to-paper": "^1.3.0",
     "vue-router": "^3.1.6",
     "vuetify": "^2.2.15",
-    "vuex": "^3.1.2",
-    "fsevents": "^2.1.2"
+    "vuex": "^3.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",

@@ -239,13 +239,16 @@
                       <th class="p-2">
                         مشتريات
                       </th>
+                      <th class="p-2">
+                        مبيعات
+                      </th>
                       <th rowspan="1">
                         دفعات صادرة
                       </th>
                     </tr>
                     <tr v-if="fullReport">
                       <th class="p-2">
-                        {{ totaldofaatSadera.toLocaleString() }}
+                        {{ totaldofaatWareda.toLocaleString() }}
                       </th>
                       <th class="p-2">
                         {{ totaltahdeen.toLocaleString() }}
@@ -260,7 +263,10 @@
                         {{ totalmoshtryat.toLocaleString() }}
                       </th>
                       <th rowspan="1">
-                        {{ totaldofaatWareda.toLocaleString() }}
+                        {{ totalMabiat.toLocaleString() }}
+                      </th>
+                      <th rowspan="1">
+                        {{ totaldofaatSadera.toLocaleString() }}
                       </th>
                     </tr>
                   </tbody>
@@ -300,7 +306,7 @@
             <span
               >{{
                 counter = fullReport.length ? counter++ : counter == 1
-              }}
+              }}19
             </span>
           </template> -->
           <template v-slot:item.date="{ item }">
@@ -310,19 +316,10 @@
             <span>{{ item.clientBalance.toLocaleString() }}</span>
           </template>
           <template v-slot:item.maden="{ item }">
-            <span>{{
-              (
-                item.tahdeen +
-                item.dofaatSadera +
-                item.mortgaa +
-                item.khasmMoktsb
-              ).toLocaleString()
-            }}</span>
+            <span>{{ item.dofaatSadera.toLocaleString() }}</span>
           </template>
           <template v-slot:item.dayen="{ item }">
-            <span>{{
-              (item.moshtryat + item.dofaatWareda).toLocaleString()
-            }}</span>
+            <span>{{ item.moshtryat.toLocaleString() }}</span>
           </template>
           <template v-slot:item.action="{ item }">
             <v-icon
@@ -483,9 +480,19 @@ export default {
       // const sum = 0;
       return this.fullReport.reduce((sum = 0, item) => sum + item.mortgaa, 0);
     },
+    totalMabiat: function() {
+      // const sum = 0;
+      return this.fullReport.reduce(function(sum = 0, item) {
+        if (item.type == "بيع") return sum + item.moshtryat;
+        else return sum;
+      }, 0);
+    },
     totalmoshtryat: function() {
       // const sum = 0;
-      return this.fullReport.reduce((sum = 0, item) => sum + item.moshtryat, 0);
+      return this.fullReport.reduce(function(sum = 0, item) {
+        if (item.type !== "بيع") return sum + item.moshtryat;
+        else return sum;
+      }, 0);
     },
     totaldofaatWareda: function() {
       // const sum = 0;

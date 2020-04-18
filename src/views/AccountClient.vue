@@ -27,13 +27,12 @@
       <v-col cols="4" class="not-print">
         <v-autocomplete
           @click="searchClientAccount"
-          v-model="selectedClientToAcc"
           autofocus
           :items="clients"
           color="warning"
-          item-text="[name , type]"
-          single-line
+          item-text="name"
           item-value="id"
+          single-line
           label="اسم العميل"
           outlined
           return-object
@@ -45,7 +44,7 @@
               class="v-list-item v-list-item--link theme--light"
               @click="getDataClientToAcc(item)"
             >
-              {{ item.name }} / {{ item.type }}
+              {{ item.name }}
             </div>
           </template>
 
@@ -247,11 +246,7 @@
           </v-alert>
         </v-card>
       </v-col>
-      <v-col
-        cols="12"
-        class="show-data-clients"
-        v-if="clientSelectedToAcc.type == 'مورد'"
-      >
+      <v-col cols="12" class="show-data-clients">
         <template v-if="clientSelectedToAcc.id">
           <v-data-table
             :search="searchClient"
@@ -291,7 +286,7 @@
             <template v-slot:item.clientBalance="{ item }">
               <span>{{ item.clientBalance.toLocaleString() }}</span>
             </template>
-            <template v-if="addOrder" v-slot:body.prepend="{ items }">
+            <template v-if="addOrder" v-slot:body.prepend>
               <tr class="input-add-order not-print">
                 <td>
                   {{ date.toLocaleDateString() }}
@@ -319,7 +314,7 @@
                   <v-autocomplete
                     dense
                     @click="searchseeds"
-                    v-model="seed.name"
+                    item-value="id"
                     :items="seeds"
                     color="warning"
                     item-text="name"
@@ -485,7 +480,7 @@
             <template v-slot:item.clientBalance="{ item }">
               <span>{{ item.clientBalance.toLocaleString() }}</span>
             </template>
-            <template v-if="addOrder" v-slot:body.prepend="{ items }">
+            <template v-if="addOrder" v-slot:body.prepend>
               <tr class="input-add-order not-print">
                 <td>
                   {{ date.toLocaleDateString() }}
@@ -513,10 +508,12 @@
                   <v-autocomplete
                     dense
                     @click="searchseeds"
+                    :search-input.sync="searchInput"
                     v-model="seed.name"
                     :items="seeds"
                     color="warning"
                     item-text="name"
+                    item-value="id"
                     label="اسم البذرة"
                     outlined
                     single-line
@@ -526,12 +523,14 @@
                     return-object
                   >
                     <template v-slot:item="{ item }">
-                      <div
-                        class="v-list-item v-list-item--link theme--light"
-                        @click="getDataSeed(item)"
-                      >
-                        {{ item.name }}
-                      </div>
+                      <v-list-tile-content>
+                        <!-- Highlight output item.name -->
+                        <v-list-tile-title
+                          @click="getDataSeed(item)"
+                          v-html="item.name"
+                        >
+                        </v-list-tile-title>
+                      </v-list-tile-content>
                     </template>
 
                     <template v-slot:no-results>
@@ -674,6 +673,7 @@ import { mapState } from "vuex";
 export default {
   name: "accountclient",
   data: () => ({
+    searchInput: "",
     notShow: false,
     hasQuNot: false,
     status: "دائن",
@@ -689,7 +689,7 @@ export default {
     totalCostBuying: null,
     totalCostSelling: null,
     seed: {
-      name: "",
+      name: null,
       unit: "",
       id: null,
       sellingPrice: null,
@@ -946,14 +946,11 @@ export default {
       this.seed = Object.assign({}, item);
       Object.assign(this.seeds[this.seedIndex], this.seed);
       // this to assign data after change by perparer order
-      // this.kmaia = this.seed.quantity;
-      this.seed.priceBuying = this.priceBuying;
-      this.seed.priceSelling = this.priceSelling;
+
+      // this.seed.priceBuying = this.priceBuying;
+      // this.seed.priceSelling = this.priceSelling;
       this.priceBuying = this.seed.buyingPrice;
       this.priceSelling = this.seed.sellingPrice;
-      // console.log(this.kmaia);
-      // console.log(this.seed.quantity);
-      // console.log(this.Order.quantity);
       // this to assign  variables  from get api to vars to post api
       this.Order.quantity = this.kmaia;
       this.Order.seedName = this.seed.name;
