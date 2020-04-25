@@ -194,7 +194,7 @@
             لا يوجد بيانات
           </template>
           <template v-slot:item.date="{ item }">
-            <span>{{ new Date(item.date).toLocaleDateString() }}</span>
+            <span>{{ new Date(item.date).toLocaleDateString('ar-EG') }}</span>
           </template>
           <template v-slot:item.maden="{ item }">
             <span>{{

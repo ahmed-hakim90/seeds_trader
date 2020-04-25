@@ -246,7 +246,9 @@
           </v-alert>
         </v-card>
       </v-col>
-      <v-col cols="12" class="show-data-clients">
+      <v-col cols="12" class="show-data-clients"
+        v-if="clientSelectedToAcc.type == 'مورد'"
+      >
         <template v-if="clientSelectedToAcc.id">
           <v-data-table
             :search="searchClient"
@@ -264,7 +266,7 @@
             </template>
 
             <template v-slot:item.date="{ item }">
-              <span>{{ new Date(item.date).toLocaleDateString() }}</span>
+              <span>{{ new Date(item.date).toLocaleDateString('ar-EG') }}</span>
             </template>
 
             <template v-slot:item.moshtryat="{ item }">
@@ -289,7 +291,7 @@
             <template v-if="addOrder" v-slot:body.prepend>
               <tr class="input-add-order not-print">
                 <td>
-                  {{ date.toLocaleDateString() }}
+                  {{ date.toLocaleDateString('ar-EG') }}
                 </td>
                 <td>
                   <v-text-field
@@ -450,7 +452,7 @@
             </template>
 
             <template v-slot:item.date="{ item }">
-              <span>{{ new Date(item.date).toLocaleDateString() }}</span>
+              <span>{{ new Date(item.date).toLocaleDateString('ar-EG') }}</span>
             </template>
 
             <template v-slot:item.moshtryat="{ item }">
@@ -478,12 +480,12 @@
             </template>
 
             <template v-slot:item.clientBalance="{ item }">
-              <span>{{ item.clientBalance.toLocaleString() }}</span>
+              <span>{{ item.clientBalance.toLocaleString('ar-EG') }}</span>
             </template>
             <template v-if="addOrder" v-slot:body.prepend>
               <tr class="input-add-order not-print">
                 <td>
-                  {{ date.toLocaleDateString() }}
+                  {{ date.toLocaleDateString('ar-EG') }}
                 </td>
                 <td>
                   <v-text-field

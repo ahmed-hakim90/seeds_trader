@@ -309,8 +309,11 @@
               }}19
             </span>
           </template> -->
+          <template v-slot:item.dofaatWareda="{ item }">
+            <span>{{ item.dofaatWareda }}</span>
+          </template>
           <template v-slot:item.date="{ item }">
-            <span>{{ new Date(item.date).toLocaleDateString() }}</span>
+            <span>{{ new Date(item.date).toLocaleDateString('ar-EG') }}</span>
           </template>
           <template v-slot:item.clientBalance="{ item }">
             <span>{{ item.clientBalance.toLocaleString() }}</span>
@@ -397,6 +400,7 @@ export default {
       { text: "الكمية", value: "quantity", align: "center" },
       { text: "الوحدة", value: "unit", align: "center" },
       { text: "سعر الوحدة", value: "unitPrice", align: "center" },
+      { text: "دفعات واردة", value: "dofaatWareda", align: "center" },
       { text: "دائن", value: "maden", align: "center" },
       { text: "مدين", value: "dayen", align: "center" },
       { text: "نوع الطلب", value: "type", align: "center" },
@@ -558,7 +562,6 @@ export default {
       }, 300);
     },
     save() {
-      if (this.editedIndexOrder > -1) {
         Object.assign(this.fullReport[this.editedIndexOrder], this.order);
         Axios({
           method: "PUT",
@@ -574,9 +577,6 @@ export default {
             var Console = console;
             Console.log(err);
           });
-      } else {
-        this.fullReport.push(this.editedItem);
-      }
       this.close();
     }
   }
