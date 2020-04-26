@@ -179,6 +179,7 @@
         <v-alert type="error" text>
           برجاء ادخل البيانات لاظهار التقرير
         </v-alert>
+        
       </v-card>
     </v-col>
     <v-col cols="12" class="show-data-clients">
@@ -194,7 +195,7 @@
             لا يوجد بيانات
           </template>
           <template v-slot:item.date="{ item }">
-            <span>{{ new Date(item.date).toLocaleDateString('ar-EG') }}</span>
+            <span>{{ new Date(item.date).toLocaleDateString("ar-EG") }}</span>
           </template>
           <template v-slot:item.maden="{ item }">
             <span>{{

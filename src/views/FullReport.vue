@@ -142,12 +142,32 @@
       <v-icon class="ml-2">mdi-printer</v-icon>
       طباعة
     </v-btn>
-    <v-alert type="success" class="" v-if="showMsgSuc">
+
+    <v-alert
+      border="bottom"
+      colored-border
+      type="success"
+      transition="leave-to-class"
+      color="green"
+      elevation="2"
+      dismissible
+      v-if="showMsgSuc"
+    >
       {{ msg }}
     </v-alert>
-    <v-alert type="error" v-if="msgError">
+    <v-alert
+      border="bottom"
+      colored-border
+      type="error"
+      transition="leave-to-class"
+      color="red"
+      elevation="2"
+      dismissible
+      v-if="msgError"
+    >
       {{ msg }}
     </v-alert>
+    
     <v-col cols="12" class="text-center">
       <p class="display-1 line-after">تقرير شامل</p>
     </v-col>
@@ -577,8 +597,8 @@ export default {
         .catch((err) => {
           var Console = console;
           Console.log(err);
-           this.msgError = true;
-        this.msg = "لم يتم التعديل";
+          this.msgError = true;
+          this.msg = "لم يتم التعديل";
         });
       this.close();
     },

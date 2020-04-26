@@ -677,6 +677,7 @@ export default {
       this.$store.dispatch("loadSeeds");
     },
     // this is to send data  client in api for save in DB
+    
     sandDataClient() {
       if (
         this.client.name != "" &&
@@ -696,7 +697,7 @@ export default {
             this.searchclients();
           } else {
             this.showMsg = true;
-            this.msg = "يوجد غلط!";
+            this.msg = "يوجد خطا!";
           }
         }, 1250);
       } else {

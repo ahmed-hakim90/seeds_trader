@@ -5,7 +5,16 @@
     <v-dialog v-model="dataBase" max-width="720px">
       <v-card class="text-center add-client">
         <div class="overlay"></div>
-        <v-alert type="error" v-if="datas">
+        <v-alert
+          border="bottom"
+          colored-border
+          type="error"
+          transition="leave-to-class"
+          color="red"
+          elevation="2"
+          dismissible
+          v-if="datas"
+        >
           {{ msg }}
         </v-alert>
         <v-card-title>
@@ -60,12 +69,32 @@
 
     <v-row class="home-btn">
       <v-col cols="12">
-        <v-alert type="error" v-if="showMsg">
+  
+<v-alert
+          border="bottom"
+          colored-border
+          type="error"
+          transition="leave-to-class"
+          color="red"
+          elevation="2"
+          dismissible
+          v-if="showMsg"
+        >
           {{ msg }}
         </v-alert>
-        <v-alert type="success" v-if="showMsgSuc">
+<v-alert
+          border="bottom"
+          colored-border
+          type="success"
+          transition="leave-to-class"
+          color="cyan"
+          elevation="2"
+          dismissible
+          v-if="showMsgSuc"
+        >
           {{ msg }}
         </v-alert>
+  
       </v-col>
       <v-col cols="12" sm="6" md="4" class="d-flex justify-space-around">
         <v-btn
@@ -162,14 +191,14 @@ export default {
     msg: "",
     passData: null,
     showMsg: false,
-    showMsgSuc: false
+    showMsgSuc: false,
   }),
 
   methods: {
     createBCApi() {
       if (this.createBC != "") {
         Axios.get(`http://localhost:8087/api/createBackup/${this.createBC}`)
-          .then(res => {
+          .then((res) => {
             this.passData = res.data;
             if (this.passData != "رقم سري خاطئ") {
               this.showMsgSuc = true;
@@ -182,7 +211,7 @@ export default {
               this.msg = "كلمة المرور الخاصة بقاعدة البيانات غير صحيحة";
             }
           })
-          .catch(err => {
+          .catch((err) => {
             var Console = console;
             Console.log(err);
           });
@@ -194,7 +223,7 @@ export default {
     restoreBCApi() {
       if (this.restoreBC != "") {
         Axios.get(`http://localhost:8087/api/restoreBackup/${this.restoreBC}`)
-          .then(res => {
+          .then((res) => {
             this.passData = res.data;
             if (this.passData == "نجحت عملية استرجاع البيانات") {
               this.showMsgSuc = true;
@@ -206,7 +235,7 @@ export default {
               this.msg = "كلمة المرور الخاصة بقاعدة البيانات غير صحيحة";
             }
           })
-          .catch(err => {
+          .catch((err) => {
             var Console = console;
             Console.log(err);
           });
@@ -214,7 +243,7 @@ export default {
         this.datas = true;
         this.msg = "اكتب كلمة السر";
       }
-    }
-  }
+    },
+  },
 };
 </script>

@@ -10,11 +10,29 @@
         طباعة
       </v-btn>
       <!-- this is to alert in data not send -->
-      <v-alert type="info" v-if="alartApp">
+      <v-alert
+        border="bottom"
+        colored-border
+        type="info"
+        transition="leave-to-class"
+        color="cyan"
+        elevation="2"
+        dismissible
+        v-if="alartApp"
+      >
         {{ msgAlert }}
       </v-alert>
       <!-- when data send  -->
-      <v-alert type="success" v-if="success">
+      <v-alert
+        border="bottom"
+        colored-border
+        type="success"
+        transition="leave-to-class"
+        color="cyan"
+        elevation="2"
+        dismissible
+        v-if="success"
+      >
         {{ msgAlert }}
       </v-alert>
       <v-col cols="12" class="text-center">
@@ -239,14 +257,22 @@
         </v-card>
       </v-col>
 
-      <v-col cols="12" v-if="!clientSelectedToAcc.id">
-        <v-card class="loader" height="156">
-          <v-alert type="error" style="z-index:1" text>
-            برجاء ادخل البيانات لاظهار التقرير
-          </v-alert>
-        </v-card>
-      </v-col>
-      <v-col cols="12" class="show-data-clients"
+      <v-alert
+        v-if="!clientSelectedToAcc.id"
+        border="bottom"
+        colored-border
+        type="error"
+        transition="leave-to-class"
+        color="red"
+        elevation="2"
+        dismissible
+        style="z-index:1"
+      >
+        برجاء ادخل البيانات لاظهار التقرير
+      </v-alert>
+      <v-col
+        cols="12"
+        class="show-data-clients"
         v-if="clientSelectedToAcc.type == 'مورد'"
       >
         <template v-if="clientSelectedToAcc.id">
@@ -266,7 +292,7 @@
             </template>
 
             <template v-slot:item.date="{ item }">
-              <span>{{ new Date(item.date).toLocaleDateString('ar-EG') }}</span>
+              <span>{{ new Date(item.date).toLocaleDateString("ar-EG") }}</span>
             </template>
 
             <template v-slot:item.moshtryat="{ item }">
@@ -291,7 +317,7 @@
             <template v-if="addOrder" v-slot:body.prepend>
               <tr class="input-add-order not-print">
                 <td>
-                  {{ date.toLocaleDateString('ar-EG') }}
+                  {{ date.toLocaleDateString("ar-EG") }}
                 </td>
                 <td>
                   <v-text-field
@@ -452,7 +478,7 @@
             </template>
 
             <template v-slot:item.date="{ item }">
-              <span>{{ new Date(item.date).toLocaleDateString('ar-EG') }}</span>
+              <span>{{ new Date(item.date).toLocaleDateString("ar-EG") }}</span>
             </template>
 
             <template v-slot:item.moshtryat="{ item }">
@@ -480,12 +506,12 @@
             </template>
 
             <template v-slot:item.clientBalance="{ item }">
-              <span>{{ item.clientBalance.toLocaleString('ar-EG') }}</span>
+              <span>{{ item.clientBalance.toLocaleString("ar-EG") }}</span>
             </template>
             <template v-if="addOrder" v-slot:body.prepend>
               <tr class="input-add-order not-print">
                 <td>
-                  {{ date.toLocaleDateString('ar-EG') }}
+                  {{ date.toLocaleDateString("ar-EG") }}
                 </td>
                 <td>
                   <v-text-field
@@ -697,7 +723,7 @@ export default {
       sellingPrice: null,
       buyingPrice: null,
       quantity: 0,
-      soldQuantity: 0
+      soldQuantity: 0,
     },
     addOrder: false,
     date: new Date(),
@@ -714,7 +740,7 @@ export default {
       name: "",
       balance: 0,
       type: "",
-      phone: ""
+      phone: "",
     },
     Order: {
       clientPhone: "",
@@ -736,7 +762,7 @@ export default {
       khasmMoktsb: 0,
       mortgaa: 0,
       moshtryat: 0,
-      dofaatWareda: null
+      dofaatWareda: null,
     },
     typeOrder: ["بيع", "شراء", "غير محدد"],
     selectedClientToAcc: null,
@@ -760,7 +786,7 @@ export default {
       //  { text: "دفعة واردة مدين", value: "dayenSh", align: "center" },
       //  { text: "دفعة صادرة دائن", value: "madenSh", align: "center" },
       { text: "تكلفة الطلب", value: "moshtryat", align: "center" },
-      { text: "رصيد ", value: "clientBalance", align: "center" }
+      { text: "رصيد ", value: "clientBalance", align: "center" },
     ],
     headersNameSh: [
       { text: "التاريخ ", value: "date", dataType: "Date", align: "center" },
@@ -773,8 +799,8 @@ export default {
       { text: "دفعة واردة دائن", value: "dayenSh", align: "center" },
       { text: "دفعة صادرة  مدين", value: "madenSh", align: "center" },
       { text: "تكلفة الطلب", value: "moshtryat", align: "center" },
-      { text: "رصيد ", value: "clientBalance", align: "center" }
-    ]
+      { text: "رصيد ", value: "clientBalance", align: "center" },
+    ],
   }),
   created() {
     setInterval(() => {
@@ -863,7 +889,7 @@ export default {
       this.msgAlert = "برجاء اضغط علي زر العرض لاظهار البيانات الجديدة";
       this.pickerStartStemp = Date.parse(`${this.pickerStart} 00:00:00 `);
       this.pickerEndStemp = Date.parse(`${this.pickerEnd} 23:59:59`);
-    }
+    },
   },
   computed: {
     ...mapState(["accClient", "clients", "seeds"]),
@@ -908,7 +934,7 @@ export default {
         (sum = 0, item) => sum + item.dofaatWareda,
         0
       );
-    }
+    },
   },
   mounted() {
     this.pickerStartStemp = Date.parse(`${this.pickerStart} 00:00:00 `);
@@ -988,7 +1014,7 @@ export default {
         let payload = {
           id: this.clientSelectedToAcc.id,
           pickerStartStemp: this.pickerStartStemp,
-          pickerEndStemp: this.pickerEndStemp
+          pickerEndStemp: this.pickerEndStemp,
           /* more parameters */
         };
         this.$store.dispatch("loadAccountClient", payload);
@@ -1071,7 +1097,7 @@ export default {
     closeOrder() {
       this.reset();
       this.addOrder = false;
-    }
-  }
+    },
+  },
 };
 </script>

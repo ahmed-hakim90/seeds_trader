@@ -104,12 +104,14 @@
   height: 39rem;
 }
 
-.v-alert.v-sheet.theme--dark {
+.v-alert.v-sheet.theme--light,.v-alert.v-sheet.theme--dark {
   position: absolute;
-  width: 95%;
+  width: 350px;
   top: 10px;
+  left:39%;
   z-index: 1235;
   margin: 10px auto;
+  
 }
 
 .theme--light.v-data-table tbody tr td {

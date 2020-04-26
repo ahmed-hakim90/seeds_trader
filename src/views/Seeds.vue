@@ -5,12 +5,34 @@
       طباعة
     </v-btn>
     <v-col cols="12">
-      <v-alert type="success" v-if="showMsgSuc">
+
+         <v-alert
+        v-if="showMsgSuc"
+        border="bottom"
+        colored-border
+        type="success"
+        transition="leave-to-class"
+        color="cyan"
+        elevation="2"
+        dismissible
+       
+      >
+       {{ msg }}
+      </v-alert>
+          <v-alert
+        v-if="msgError"
+        border="bottom"
+        colored-border
+        type="error"
+        transition="leave-to-class"
+        color="red"
+        elevation="2"
+        dismissible
+       
+      >
         {{ msg }}
       </v-alert>
-      <v-alert type="error" v-if="msgError">
-        {{ msg }}
-      </v-alert>
+
     </v-col>
     <v-col cols="12" class="text-center">
       <p class="display-1 line-after">البذور</p>
