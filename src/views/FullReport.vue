@@ -313,7 +313,7 @@
             <span>{{ item.dofaatWareda }}</span>
           </template>
           <template v-slot:item.date="{ item }">
-            <span>{{ new Date(item.date).toLocaleDateString('ar-EG') }}</span>
+            <span>{{ new Date(item.date).toLocaleDateString("ar-EG") }}</span>
           </template>
           <template v-slot:item.clientBalance="{ item }">
             <span>{{ item.clientBalance.toLocaleString() }}</span>
@@ -389,7 +389,7 @@ export default {
       khasmMoktsb: 0,
       mortgaa: 0,
       moshtryat: 0,
-      dofaatWareda: 0
+      dofaatWareda: 0,
     },
     headersName: [
       { text: "التاريخ ", value: "date", dataType: "Date", align: "center" },
@@ -404,8 +404,8 @@ export default {
       { text: "دائن", value: "maden", align: "center" },
       { text: "مدين", value: "dayen", align: "center" },
       { text: "نوع الطلب", value: "type", align: "center" },
-      { text: "التحكم", value: "action", sortable: false }
-    ]
+      { text: "التحكم", value: "action", sortable: false },
+    ],
   }),
   created() {
     setInterval(() => {
@@ -421,7 +421,7 @@ export default {
       this.pickerEndStemp = Date.parse(`${this.pickerEnd} 23:59:59`);
       let payload = {
         pickerStartStemp: this.pickerStartStemp,
-        pickerEndStemp: this.pickerEndStemp
+        pickerEndStemp: this.pickerEndStemp,
         /* more parameters */
       };
       this.$store.dispatch("loadFullReport", payload);
@@ -432,7 +432,7 @@ export default {
       // console.log(this.pickerStartStemp);
       let payload = {
         pickerStartStemp: this.pickerStartStemp,
-        pickerEndStemp: this.pickerEndStemp
+        pickerEndStemp: this.pickerEndStemp,
         /* more parameters */
       };
       this.$store.dispatch("loadFullReport", payload);
@@ -448,7 +448,7 @@ export default {
       this.order.moshtryat = this.kmaia * this.price;
       this.order.quantity = this.kmaia;
       this.order.buyingPrice = this.price;
-    }
+    },
   },
   computed: {
     startDate() {
@@ -504,14 +504,14 @@ export default {
         (sum = 0, item) => sum + item.dofaatWareda,
         0
       );
-    }
+    },
   },
   mounted() {
     this.pickerStartStemp = Date.parse(`${this.pickerStart} 00:00:00 `);
     this.pickerEndStemp = Date.parse(`${this.pickerEnd} 23:59:59`);
     let payload = {
       pickerStartStemp: this.pickerStartStemp,
-      pickerEndStemp: this.pickerEndStemp
+      pickerEndStemp: this.pickerEndStemp,
       /* more parameters */
     };
     this.$store.dispatch("loadFullReport", payload);
@@ -536,7 +536,7 @@ export default {
         Axios({
           method: "delete",
           url: `http://localhost:8087/api/deleteOrderById/${this.order.id}`,
-          headers: { "content-type": "application/JSON" }
+          headers: { "content-type": "application/JSON" },
         })
           .then(() => {
             this.showMsgSuc = true;
@@ -544,7 +544,7 @@ export default {
             const index = this.fullReport.indexOf(item);
             this.fullReport.splice(index, 1);
           })
-          .catch(err => {
+          .catch((err) => {
             var Console = console;
             Console.log(err);
           })
@@ -562,23 +562,26 @@ export default {
       }, 300);
     },
     save() {
-        Object.assign(this.fullReport[this.editedIndexOrder], this.order);
-        Axios({
-          method: "PUT",
-          url: `http://localhost:8087/api/updateOrderById/${this.order.id}`,
-          // data: this.order,
-          headers: { "content-type": "application/JSON" }
+      // console.log(this.order)
+      Axios({
+        method: "PUT",
+        url: `http://localhost:8087/api/updateOrderById/${this.order.id}`,
+        data: this.order,
+        headers: { "content-type": "application/JSON" },
+      })
+        .then(() => {
+          Object.assign(this.fullReport[this.editedIndexOrder], this.order);
+          this.showMsgSuc = true;
+          this.msg = "تم التعديل  بنجاح";
         })
-          .then(() => {
-            this.showMsgSuc = true;
-            this.msg = "تم التعديل  بنجاح";
-          })
-          .catch(err => {
-            var Console = console;
-            Console.log(err);
-          });
+        .catch((err) => {
+          var Console = console;
+          Console.log(err);
+           this.msgError = true;
+        this.msg = "لم يتم التعديل";
+        });
       this.close();
-    }
-  }
+    },
+  },
 };
 </script>
