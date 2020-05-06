@@ -5,10 +5,28 @@
       طباعة
     </v-btn>
     <v-col cols="12">
-      <v-alert type="success" v-if="showMsgSuc">
+        <v-alert
+        border="bottom"
+        colored-border
+        type="info"
+        transition="leave-to-class"
+        color="green"
+        elevation="2"
+        dismissible
+        v-if="showMsgSuc"
+      >
         {{ msg }}
       </v-alert>
-      <v-alert type="error" v-if="msgError">
+        <v-alert
+        border="bottom"
+        colored-border
+        type="error"
+        transition="leave-to-class"
+        color="red"
+        elevation="2"
+        dismissible
+        v-if="msgError"
+      >
         {{ msg }}
       </v-alert>
     </v-col>
@@ -215,6 +233,7 @@ export default {
           headers: { "content-type": "application/JSON" }
         })
           .then(() => {
+              this.msgError = false;
             this.showMsgSuc = true;
             this.msg = "تم الحذف بنجاح";
             const index = this.clients.indexOf(item);
@@ -226,6 +245,7 @@ export default {
           })
           .finally(() => (this.showMsgSuc = true));
       } else {
+        this.showMsgSuc = false;
         this.msgError = true;
         this.msg = "كلمة السر غير صحيحة  لم يتم الحذف";
       }

@@ -5,12 +5,31 @@
       طباعة
     </v-btn>
     <v-col cols="12" class="text-center">
-      <v-alert type="info" text v-if="alartApp">
+             <v-alert
+        border="bottom"
+        colored-border
+        type="info"
+        transition="leave-to-class"
+        color="cyan"
+        elevation="2"
+        dismissible
+        v-if="alartApp"
+      >
         {{ msgAlert }}
       </v-alert>
-      <v-alert type="success" text v-if="alartAppSuc">
+         <v-alert
+        border="bottom"
+        colored-border
+        type="success"
+        transition="leave-to-class"
+        color="cyan"
+        elevation="2"
+        dismissible
+        v-if="alartAppSuc"
+      >
         {{ msgAlert }}
       </v-alert>
+   
       <p class="display-1 line-after">
         تقرير بذرة
       </p>

@@ -159,9 +159,14 @@
                 <v-icon class="mr-4">mdi-calendar</v-icon>
                 التاريخ</span
               >
-              <span> من {{ pickerStart }}</span>
+              <span> من 
+                
+                {{ new Date(pickerStart).toLocaleDateString("ar-EG") }}
+                </span>
               <span> / </span>
-              <span> الي {{ pickerEnd }}</span>
+              <span> الي
+                {{ new Date(pickerEnd).toLocaleDateString("ar-EG") }}
+                 </span>
             </div>
             <v-col cols="6" class="padding-0">
               <div
@@ -192,22 +197,22 @@
                     </tr>
                     <tr v-if="accClient">
                       <th class="p-2">
-                        {{ totaldofaatWareda.toLocaleString() }}
+                        {{ totaldofaatWareda.toLocaleString("ar-EG") }}
                       </th>
                       <th class="p-2">
-                        {{ totaltahdeen.toLocaleString() }}
+                        {{ totaltahdeen.toLocaleString("ar-EG") }}
                       </th>
                       <th class="p-2">
-                        {{ totalkhasmMoktsb.toLocaleString() }}
+                        {{ totalkhasmMoktsb.toLocaleString("ar-EG") }}
                       </th>
                       <th class="p-2">
-                        {{ totalmortgaa.toLocaleString() }}
+                        {{ totalmortgaa.toLocaleString("ar-EG") }}
                       </th>
                       <th class="p-2">
-                        {{ totalmoshtryat.toLocaleString() }}
+                        {{ totalmoshtryat.toLocaleString("ar-EG") }}
                       </th>
                       <th rowspan="1">
-                        {{ totaldofaatSadera.toLocaleString() }}
+                        {{ totaldofaatSadera.toLocaleString("ar-EG") }}
                       </th>
                     </tr>
                   </tbody>
@@ -236,17 +241,17 @@
                     </tr>
                     <tr v-if="accClient">
                       <th rowspan="1">
-                        {{ totaldofaatSadera.toLocaleString() }}
+                        {{ totaldofaatSadera.toLocaleString('ar-EG') }}
                       </th>
                       <th class="p-2">
-                        {{ totalkhasmMoktsb.toLocaleString() }}
+                        {{ totalkhasmMoktsb.toLocaleString('ar-EG') }}
                       </th>
                       <th class="p-2">
-                        {{ totaldofaatWareda.toLocaleString() }}
+                        {{ totaldofaatWareda.toLocaleString('ar-EG') }}
                       </th>
 
                       <th class="p-2">
-                        {{ totalmoshtryat.toLocaleString() }}
+                        {{ totalmoshtryat.toLocaleString('ar-EG') }}
                       </th>
                     </tr>
                   </tbody>
@@ -297,22 +302,27 @@
 
             <template v-slot:item.moshtryat="{ item }">
               <span>{{
-                (item.moshtryat + item.dofaatWareda).toLocaleString()
+                (item.moshtryat + item.dofaatWareda).toLocaleString("ar-EG")
               }}</span>
             </template>
 
             <template v-slot:item.madenMo="{ item }">
-              <span>{{ item.dofaatSadera.toLocaleString() }}</span>
+              <span>{{ item.dofaatSadera.toLocaleString("ar-EG") }}</span>
             </template>
 
             <template v-slot:item.dayenMo="{ item }">
               <span>
-                {{ (item.dofaatWareda + item.moshtryat).toLocaleString() }}
+                {{ (item.dofaatWareda + item.moshtryat).toLocaleString("ar-EG") }}
               </span>
             </template>
-
+    <template v-slot:item.quantity="{ item }">
+              <span>{{ item.quantity.toLocaleString("ar-EG") }}</span>
+            </template>
+            <template v-slot:item.unitPrice="{ item }">
+              <span>{{ item.unitPrice.toLocaleString("ar-EG") }}</span>
+            </template>
             <template v-slot:item.clientBalance="{ item }">
-              <span>{{ item.clientBalance.toLocaleString() }}</span>
+              <span>{{ (item.clientBalance).toLocaleString("ar-EG") }}</span>
             </template>
             <template v-if="addOrder" v-slot:body.prepend>
               <tr class="input-add-order not-print">
@@ -340,6 +350,7 @@
                 </td>
                 <td>
                   <v-autocomplete
+                  ref="resetElement"
                     dense
                     @click="searchseeds"
                     item-value="id"
@@ -353,6 +364,7 @@
                     placeholder="بحث البذرة"
                     prepend-inner-icon="mdi-seed"
                     return-object
+
                   >
                     <template v-slot:item="{ item }">
                       <div
@@ -448,7 +460,7 @@
                 </td>
 
                 <td>
-                  {{ Order.clientBalance.toLocaleString() }}
+                  {{ Order.clientBalance.toLocaleString("ar-EG") }}
                 </td>
               </tr>
             </template>
@@ -483,12 +495,12 @@
 
             <template v-slot:item.moshtryat="{ item }">
               <span>{{
-                (item.moshtryat + item.dofaatWareda).toLocaleString()
+                (item.moshtryat + item.dofaatWareda).toLocaleString("ar-EG")
               }}</span>
             </template>
             <template v-slot:item.madenSh="{ item }">
               <span>{{
-                (item.moshtryat + item.dofaatSadera).toLocaleString()
+                (item.moshtryat + item.dofaatSadera).toLocaleString("ar-EG")
               }}</span>
             </template>
 
@@ -500,11 +512,17 @@
                     item.dofaatWareda +
                     item.mortgaa +
                     item.khasmMoktsb
-                  ).toLocaleString()
+                  ).toLocaleString("ar-EG")
                 }}
               </span>
             </template>
 
+            <template v-slot:item.quantity="{ item }">
+              <span>{{ item.quantity.toLocaleString("ar-EG") }}</span>
+            </template>
+            <template v-slot:item.unitPrice="{ item }">
+              <span>{{ item.unitPrice.toLocaleString("ar-EG") }}</span>
+            </template>
             <template v-slot:item.clientBalance="{ item }">
               <span>{{ item.clientBalance.toLocaleString("ar-EG") }}</span>
             </template>
@@ -534,10 +552,10 @@
                 </td>
                 <td>
                   <v-autocomplete
+                  ref="resetElement"
                     dense
                     @click="searchseeds"
                     :search-input.sync="searchInput"
-                    v-model="seed.name"
                     :items="seeds"
                     color="warning"
                     item-text="name"
@@ -551,14 +569,13 @@
                     return-object
                   >
                     <template v-slot:item="{ item }">
-                      <v-list-tile-content>
-                        <!-- Highlight output item.name -->
-                        <v-list-tile-title
-                          @click="getDataSeed(item)"
-                          v-html="item.name"
-                        >
-                        </v-list-tile-title>
-                      </v-list-tile-content>
+                      <div
+                        class="v-list-item v-list-item--link theme--light"
+                        @click="getDataSeed(item)"
+                      >
+                        {{ item.name }}
+                      </div>
+                    
                     </template>
 
                     <template v-slot:no-results>
@@ -638,15 +655,15 @@
 
                 <td>
                   <span v-if="buying">
-                    {{ totalCostBuying }}
+                    {{ totalCostBuying ? totalCostBuying.toLocaleString("ar-EG") : totalCostBuying }}
                   </span>
                   <span v-if="selling">
-                    {{ totalCostSelling }}
+                    {{totalCostSelling ? totalCostSelling.toLocaleString("ar-EG") : totalCostSelling}}
                   </span>
                 </td>
 
                 <td>
-                  {{ Order.clientBalance.toLocaleString() }}
+                  {{ Order.clientBalance.toLocaleString("ar-EG") }}
                 </td>
               </tr>
             </template>
@@ -823,8 +840,7 @@ export default {
     kmaia() {
       // to
       this.Order.quantity = this.kmaia;
-      //  =this.seed.quantity ;
-      // = this.seed.quantity;
+
 
       this.Order.sellingPrice = this.priceSelling;
       this.totalCostSelling = (this.kmaia * this.priceSelling).toLocaleString();
@@ -966,7 +982,8 @@ export default {
       // this to assign  variables  from get api to vars to post api
 
       //this to hide table after select client in perparing order
-    },
+  this.showReportClient();
+},
     getDataSeed(item) {
       // this to get data selected from api for specific client
 
@@ -1093,6 +1110,8 @@ export default {
       this.Order.mortgaa = 0;
       this.Order.moshtryat = 0;
       this.Order.dofaatWareda = null;
+      this.$refs.resetElement.reset()
+      
     },
     closeOrder() {
       this.reset();
