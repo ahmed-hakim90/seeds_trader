@@ -167,7 +167,7 @@
     >
       {{ msg }}
     </v-alert>
-    
+
     <v-col cols="12" class="text-center">
       <p class="display-1 line-after">تقرير شامل</p>
     </v-col>
@@ -268,25 +268,25 @@
                     </tr>
                     <tr v-if="fullReport">
                       <th class="p-2">
-                        {{ totaldofaatWareda.toLocaleString() }}
+                        {{ totaldofaatWareda }}
                       </th>
                       <th class="p-2">
-                        {{ totaltahdeen.toLocaleString() }}
+                        {{ totaltahdeen }}
                       </th>
                       <th class="p-2">
-                        {{ totalkhasmMoktsb.toLocaleString() }}
+                        {{ totalkhasmMoktsb }}
                       </th>
                       <th class="p-2">
-                        {{ totalmortgaa.toLocaleString() }}
+                        {{ totalmortgaa }}
                       </th>
                       <th class="p-2">
-                        {{ totalmoshtryat.toLocaleString() }}
+                        {{ totalmoshtryat }}
                       </th>
                       <th rowspan="1">
-                        {{ totalMabiat.toLocaleString() }}
+                        {{ totalMabiat }}
                       </th>
                       <th rowspan="1">
-                        {{ totaldofaatSadera.toLocaleString() }}
+                        {{ totaldofaatSadera }}
                       </th>
                     </tr>
                   </tbody>
@@ -336,13 +336,13 @@
             <span>{{ new Date(item.date).toLocaleDateString("ar-EG") }}</span>
           </template>
           <template v-slot:item.clientBalance="{ item }">
-            <span>{{ item.clientBalance.toLocaleString() }}</span>
+            <span>{{ item.clientBalance }}</span>
           </template>
           <template v-slot:item.maden="{ item }">
-            <span>{{ item.dofaatSadera.toLocaleString() }}</span>
+            <span>{{ item.dofaatSadera }}</span>
           </template>
           <template v-slot:item.dayen="{ item }">
-            <span>{{ item.moshtryat.toLocaleString() }}</span>
+            <span>{{ item.moshtryat }}</span>
           </template>
           <template v-slot:item.action="{ item }">
             <v-icon
@@ -372,15 +372,16 @@ import { mapState } from "vuex";
 export default {
   name: `reportclientbuyer`,
   data: () => ({
+    showMsg: false,
+    typeAlert: "info",
+    colorAlert: "red",
+    msg: "",
     from: null,
     end: null,
     editedIndexOrder: -1,
     balanceOpenIndex: -1,
     dialog: false,
     counter: 0,
-    msg: "",
-    showMsgSuc: false,
-    msgError: false,
     pickerStart: new Date().toISOString().substr(0, 10),
     pickerEnd: new Date().toISOString().substr(0, 10),
     searchClient: "",
@@ -537,6 +538,11 @@ export default {
     this.$store.dispatch("loadFullReport", payload);
   },
   methods: {
+    alertMsg(bool, color, msgs) {
+      this.showMsg = bool;
+      this.colorAlert = color;
+      this.msg = msgs;
+    },
     print() {
       // Pass the element id here
       window.print();
@@ -559,19 +565,16 @@ export default {
           headers: { "content-type": "application/JSON" },
         })
           .then(() => {
-            this.showMsgSuc = true;
-            this.msg = "تم الحذف بنجاح";
+            this.alertMsg(true,'green', "تم الحذف بنجاح");
             const index = this.fullReport.indexOf(item);
             this.fullReport.splice(index, 1);
           })
           .catch((err) => {
             var Console = console;
             Console.log(err);
-          })
-          .finally(() => (this.showMsgSuc = true));
+          });
       } else {
-        this.msgError = true;
-        this.msg = "كلمة السر غير صحيحة  لم يتم الحذف";
+            this.alertMsg(true,'red',"كلمة السر غير صحيحة  لم يتم الحذف");
       }
     },
     close() {
@@ -597,8 +600,8 @@ export default {
         .catch((err) => {
           var Console = console;
           Console.log(err);
-          this.msgError = true;
-          this.msg = "لم يتم التعديل";
+            this.alertMsg(true,'red',"لم يتم التعديل");
+        
         });
       this.close();
     },

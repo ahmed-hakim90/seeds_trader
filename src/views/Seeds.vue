@@ -5,34 +5,19 @@
       طباعة
     </v-btn>
     <v-col cols="12">
-
-         <v-alert
-        v-if="showMsgSuc"
+      <v-alert
         border="bottom"
         colored-border
-        type="success"
+        type="info"
         transition="leave-to-class"
-        color="cyan"
+        :color="colorAlert"
         elevation="2"
         dismissible
-       
-      >
-       {{ msg }}
-      </v-alert>
-          <v-alert
-        v-if="msgError"
-        border="bottom"
-        colored-border
-        type="error"
-        transition="leave-to-class"
-        color="red"
-        elevation="2"
-        dismissible
-       
+        v-if="showMsg"
       >
         {{ msg }}
       </v-alert>
-
+    
     </v-col>
     <v-col cols="12" class="text-center">
       <p class="display-1 line-after">البذور</p>
@@ -175,11 +160,12 @@ import { mapState } from "vuex";
 export default {
   name: "accountclient",
   data: () => ({
+   showMsg: false,
+    typeAlert: "info",
+    colorAlert: "red",
     msg: "",
-    msgError: false,
-
     searchSeeds: "",
-    showMsgSuc: false,
+
     dialog: false,
     editedIndex: -1,
     seed: {
@@ -227,6 +213,11 @@ export default {
     this.$store.dispatch("loadSeeds");
   },
   methods: {
+        alertMsg(bool, color, msgs) {
+      this.showMsg = bool;
+      this.colorAlert = color;
+      this.msg = msgs;
+    },
     editItem(item) {
       this.editedIndex = this.seeds.indexOf(item);
       this.seed = Object.assign({}, item);
@@ -253,8 +244,7 @@ export default {
           headers: { "content-type": "application/JSON" }
         })
           .then(() => {
-            this.showMsgSuc = true;
-            this.msg = "تم الحذف بنجاح";
+        this.alertMsg(true,'green',"تم الحذف بنجاح");
             const index = this.seeds.indexOf(item);
             this.seeds.splice(index, 1);
           })
@@ -264,8 +254,7 @@ export default {
           })
           .finally(() => (this.showMsgSuc = true));
       } else {
-        this.msgError = true;
-        this.msg = " كلمة السر غير صحيحة  لم يتم الحذف";
+        this.alertMsg(true,'red',"كلمة السر غير صحيحة  لم يتم الحذف");
       }
     },
     close() {
@@ -285,8 +274,7 @@ export default {
           headers: { "content-type": "application/JSON" }
         })
           .then(() => {
-            this.showMsgSuc = true;
-            this.msg = "تم التعديل بنجاح";
+        this.alertMsg(true,'green',"تم التعديل بنجاح");
           })
           .catch(err => {
             var Console = console;

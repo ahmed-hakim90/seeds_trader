@@ -3,28 +3,16 @@
     <div class="add-client ">
       <div class="overlay"></div>
       <v-alert
+        type="info"
+        :color="colorAlert"
+        v-if="showMsg"
         border="bottom"
         colored-border
-        type="success"
         transition="leave-to-class"
-        color="cyan"
         elevation="2"
         dismissible
-        v-if="showMsgSuc"
       >
-        {{ passData }}
-      </v-alert>
-      <v-alert
-        border="bottom"
-        colored-border
-        type="error"
-        transition="leave-to-class"
-        color="red"
-        elevation="2"
-        dismissible
-        v-if="error"
-      >
-        {{ error }}
+        {{ msg }}
       </v-alert>
       <v-col cols="4">
         <v-btn
@@ -94,10 +82,10 @@
 import Axios from "axios";
 export default {
   data: () => ({
-    passData: null,
+    colorAlert: "red",
     showMsg: false,
     msg: "",
-    showMsgSuc: false,
+    passData:null,
     password: "",
     restoreBC: "",
     authLogin: true,
@@ -128,21 +116,21 @@ export default {
     error() {
       return this.$store.getters.error;
     },
-    // password() {
-    //   if (window.sessionStorage.getItem("password", "5678")) {
-    //     this.$router.push("/");
-    //   }
-    // }
   },
   methods: {
+    alertMsg(bool, color, msgs) {
+      this.showMsg = bool;
+
+      this.colorAlert = color;
+      this.msg = msgs;
+    },
     login() {
       if (this.password !== "") {
         this.$store.dispatch("loginVuex", {
           password: this.password,
         });
       } else {
-        this.showMsg = true;
-        this.error = " ادخل كلمة المرور من فضلك";
+        this.alertMsg(true,'red'," ادخل كلمة المرور من فضلك");
       }
     },
     restoreBCApi() {
@@ -151,16 +139,14 @@ export default {
         .then((res) => {
           this.passData = res.data;
           if (res.status == 200) {
-            this.passData = "تم الاستعادة";
-            this.showMsgSuc = true;
+            this.alertMsg(true,'green',"تم الاستعادة");
           }
-          // this.hideRestore = true;
         })
         .catch((err) => {
           var Console = console;
           Console.log(err);
         });
     },
-  },
+  }
 };
 </script>

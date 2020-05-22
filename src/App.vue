@@ -84,12 +84,16 @@
     <v-content>
       <v-container fluid>
         <v-alert
-          type="success"
+          border="bottom"
+          colored-border
+          type="info"
+          transition="leave-to-class"
+          :color="colorAlert"
+          elevation="2"
           dismissible
-          close-text="Close Alert"
-          v-if="showMsgSuc"
+          v-if="showMsg"
         >
-          تم الاضافة بنجاح
+          {{ msg }}
         </v-alert>
         <v-dialog
           v-model="authSignout"
@@ -100,6 +104,18 @@
         >
           <v-card class="text-center add-client">
             <div class="overlay"></div>
+            <v-alert
+              border="bottom"
+              colored-border
+              type="info"
+              transition="leave-to-class"
+              :color="colorAlert"
+              elevation="2"
+              dismissible
+              v-if="showMsg"
+            >
+              {{ msg }}
+            </v-alert>
             <v-card-title>
               <span class="headline">تسجيل الخروج</span>
             </v-card-title>
@@ -124,9 +140,6 @@
         <v-dialog v-model="dialogFormClient" persistent max-width="600px">
           <v-card class="text-center add-client">
             <div class="overlay"></div>
-            <v-alert type="error" v-if="showMsg">
-              برجاء ادخل البيانات كاملة
-            </v-alert>
             <v-form ref="form">
               <v-card-title>
                 <span class="headline">اضافة عميل جديد</span>
@@ -204,9 +217,7 @@
         <v-dialog v-model="dialogFormSeed" persistent max-width="600px">
           <v-card class="text-center add-client">
             <div class="overlay"></div>
-            <v-alert type="error" v-if="showMsg">
-              برجاء ادخل البيانات كاملة
-            </v-alert>
+
             <v-form ref="form">
               <v-card-title>
                 <span class="headline">اضافة بذرة جديد</span>
@@ -278,20 +289,7 @@
         <v-dialog v-model="dialogForOrder" persistent max-width="800px">
           <v-card class="text-center add-client sell">
             <div class="overlay"></div>
-            <v-alert type="error" v-if="showMsg">
-              {{ msg }}
-            </v-alert>
 
-            <v-alert
-              type="success"
-              color="green"
-              text
-              v-if="showSelect"
-              dismissible
-              transition="scroll-x-reverse-transition"
-            >
-              {{ msg }}
-            </v-alert>
             <v-form ref="form">
               <v-card-title>
                 <span class="headline">عملية {{ Order.type }} </span>
@@ -512,13 +510,15 @@ export default {
   },
 
   data: () => ({
+    showMsg: false,
+    typeAlert: "info",
+    colorAlert: "red",
+    msg: "",
     passData: null,
     restoreBC: "",
     kmaia: null,
     priceBuying: null,
     priceSelling: null,
-    showMsg: false,
-    showMsgSuc: false,
     authSignout: false,
     showThree: false,
     dialogFormClient: false,
@@ -533,7 +533,6 @@ export default {
     // searchclients: "",
     clientIndex: -1,
     // to select seed
-    showSelect: false,
     selectForSeed: null,
     seedIndex: -1,
     // this is client to assign  data from api
@@ -544,7 +543,7 @@ export default {
       name: "",
       phone: "",
       type: "",
-      balance: null
+      balance: null,
     },
     // this is seed to assign  data from api
 
@@ -554,7 +553,7 @@ export default {
       sellingPrice: null,
       buyingPrice: null,
       quantity: 0,
-      soldQuantity: 0
+      soldQuantity: 0,
     },
     // this is order to send  data for api
     Order: {
@@ -575,31 +574,31 @@ export default {
       khasmMoktsb: null,
       mortgaa: null,
       moshtryat: null,
-      dofaatWareda: null
+      dofaatWareda: null,
     },
     //  this is left side menu
     menuNav: [
       {
         title: "الصفحة الرئيسية",
         icon: "mdi-home-city-outline",
-        link: "/"
+        link: "/",
       },
       { title: "المخزن", icon: "mdi-cactus", link: "/seeds" },
       {
         title: " تقرير شامل",
         icon: "mdi-file-chart",
-        link: "/fullReport"
+        link: "/fullReport",
       },
       {
         title: "كشف حساب",
         icon: "mdi-feature-search",
-        link: "/accountclient"
+        link: "/accountclient",
       },
       {
         title: "تقرير بذرة",
         icon: "mdi-seed",
-        link: "/seedReport"
-      }
+        link: "/seedReport",
+      },
     ],
     // to assign client selected = for client in order
     clientSelected: {
@@ -607,7 +606,7 @@ export default {
       name: "",
       balance: 0,
       type: "",
-      phone: ""
+      phone: "",
     },
     // to assign seed selected = for seed in order
     seedSelected: {
@@ -616,18 +615,15 @@ export default {
       sellingPrice: 0,
       buyingPrice: 0,
       quantity: 0,
-      soldQuantity: 0
-    }
+      soldQuantity: 0,
+    },
   }),
   created() {
     setInterval(() => {
-      this.showMsgSuc = false;
       this.showMsg = false;
-      this.msgAlert = false;
-      this.showSelect = false;
     }, 8000);
     setInterval(() => {
-      this.showSelect = false;
+      this.showMsg = false;
     }, 3000);
   },
   computed: {
@@ -640,7 +636,7 @@ export default {
     },
     success() {
       return this.$store.getters.success;
-    }
+    },
   },
   watch: {
     // this to watch input if change  and change in input moshtryat
@@ -666,10 +662,15 @@ export default {
       this.Order.moshtryat = this.kmaia * this.priceBuying;
       this.Order.quantity = this.kmaia;
       this.Order.buyingPrice = this.priceBuying;
-    }
+    },
   },
 
   methods: {
+    alertMsg(bool, color, msgs) {
+      this.showMsg = bool;
+      this.colorAlert = color;
+      this.msg = msgs;
+    },
     searchclients() {
       this.$store.dispatch("loadClients");
     },
@@ -677,7 +678,7 @@ export default {
       this.$store.dispatch("loadSeeds");
     },
     // this is to send data  client in api for save in DB
-    
+
     sandDataClient() {
       if (
         this.client.name != "" &&
@@ -687,7 +688,7 @@ export default {
       ) {
         this.$store.dispatch("saveClient", { client: this.client });
         this.isLoadingBtn = true;
-        this.showMsgSuc = true;
+
         // this.dialogFormClient = false;
         this.searchclients();
         setTimeout(() => {
@@ -696,14 +697,12 @@ export default {
             this.reset();
             this.searchclients();
           } else {
-            this.showMsg = true;
-            this.msg = "يوجد خطا!";
+            this.alertMsg(true, "red", "يوجد خطا!");
           }
         }, 1250);
       } else {
-        this.showMsg = true;
+        this.alertMsg(true, "red", "برجاء ادخال البيانات كاملة!");
         this.isLoadingBtn = false;
-        this.msg = "برجاء ادخال البيانات كاملة!";
       }
     },
     // this is to send data  seed in api for save in DB
@@ -727,7 +726,7 @@ export default {
           }
         }, 1250);
       } else {
-        this.showMsg = true;
+        this.alertMsg(true, "red", "برجاء ادخال البيانات كاملة!");
         this.isLoadingBtn = false;
       }
     },
@@ -744,8 +743,9 @@ export default {
       this.Order.clientId = this.clientSelected.id;
       this.Order.clientName = this.clientSelected.name;
       this.Order.clientBalance = this.clientSelected.balance;
-      this.showSelect = true;
-      this.msg = "تم اختيار العميل";
+
+      this.alertMsg(true, "blue", "تم اختيار العميل");
+
       //this to hide table after select client in perparing order
     },
 
@@ -767,8 +767,7 @@ export default {
       this.Order.buyingPrice = this.seedSelected.buyingPrice;
       this.Order.seedId = this.seedSelected.id;
       //this to hide table after select client in perparing order
-      this.showSelect = true;
-      this.msg = "تم اختيار البذرة";
+      this.alertMsg(true, "blue", "تم اختيار البذرة");
     },
 
     // to send data in api to save it in DB
@@ -796,11 +795,9 @@ export default {
       }
       if (this.Order.clientName != "" && this.Order.seedName != "") {
         this.$store.dispatch("saveOrder", { Order: this.Order });
-
-        this.showMsgSuc = true;
-        // this.dialogForOrder = false;
         setTimeout(() => {
           if (this.$store.getters.success) {
+      this.alertMsg(true, "green", "تم اضافة الطلب");
             this.reset();
             this.isLoading = true;
             this.isLoadingBtn = false;
@@ -808,7 +805,7 @@ export default {
           }
         }, 1250);
       } else {
-        this.showMsg = true;
+      this.alertMsg(true, "red", "لم يتم حفظ الطلب");
       }
     },
     signout() {
@@ -863,15 +860,14 @@ export default {
     restoreBCApi() {
       var validate = prompt("ادخل كلمة السر لإعادة البيانات");
       Axios.get(`http://localhost:8087/api/restoreBackup/${validate}`)
-        .then(res => {
+        .then((res) => {
           this.passData = res.data;
-          this.showMsgSuc = true;
         })
-        .catch(err => {
+        .catch((err) => {
           var Console = console;
           Console.log(err);
         });
-    }
-  }
+    },
+  },
 };
 </script>

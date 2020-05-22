@@ -11,30 +11,19 @@
       </v-btn>
       <!-- this is to alert in data not send -->
       <v-alert
+        type="info"
+        :color="colorAlert"
+        v-if="showMsg"
         border="bottom"
         colored-border
-        type="info"
         transition="leave-to-class"
-        color="cyan"
         elevation="2"
         dismissible
-        v-if="alartApp"
       >
-        {{ msgAlert }}
+        {{ msg }}
       </v-alert>
       <!-- when data send  -->
-      <v-alert
-        border="bottom"
-        colored-border
-        type="success"
-        transition="leave-to-class"
-        color="cyan"
-        elevation="2"
-        dismissible
-        v-if="success"
-      >
-        {{ msgAlert }}
-      </v-alert>
+
       <v-col cols="12" class="text-center">
         <!-- title page heading -->
         <p class="display-1 line-after">
@@ -159,19 +148,24 @@
                 <v-icon class="mr-4">mdi-calendar</v-icon>
                 التاريخ</span
               >
-              <span> من 
-                
-                {{ new Date(pickerStart).toLocaleDateString("ar-EG") }}
-                </span>
+              <span>
+                من
+
+                {{ new Date(pickerStart).toLocaleDateString() }}
+              </span>
               <span> / </span>
-              <span> الي
-                {{ new Date(pickerEnd).toLocaleDateString("ar-EG") }}
-                 </span>
+              <span>
+                الي
+                {{ new Date(pickerEnd).toLocaleDateString() }}
+              </span>
             </div>
             <v-col cols="6" class="padding-0">
               <div
                 class="left-side-card d-flex justify-end"
-                v-if="clientSelectedToAcc.type != 'مورد'"
+                v-if="
+                  clientSelectedToAcc.type == 'مشتري' ||
+                    clientSelectedToAcc.type == 'مشترى'
+                "
               >
                 <table>
                   <tbody>
@@ -197,22 +191,22 @@
                     </tr>
                     <tr v-if="accClient">
                       <th class="p-2">
-                        {{ totaldofaatWareda.toLocaleString("ar-EG") }}
+                        {{ totaldofaatWareda }}
                       </th>
                       <th class="p-2">
-                        {{ totaltahdeen.toLocaleString("ar-EG") }}
+                        {{ totaltahdeen }}
                       </th>
                       <th class="p-2">
-                        {{ totalkhasmMoktsb.toLocaleString("ar-EG") }}
+                        {{ totalkhasmMoktsb }}
                       </th>
                       <th class="p-2">
-                        {{ totalmortgaa.toLocaleString("ar-EG") }}
+                        {{ totalmortgaa }}
                       </th>
                       <th class="p-2">
-                        {{ totalmoshtryat.toLocaleString("ar-EG") }}
+                        {{ totalmoshtryat }}
                       </th>
                       <th rowspan="1">
-                        {{ totaldofaatSadera.toLocaleString("ar-EG") }}
+                        {{ totaldofaatSadera }}
                       </th>
                     </tr>
                   </tbody>
@@ -241,17 +235,17 @@
                     </tr>
                     <tr v-if="accClient">
                       <th rowspan="1">
-                        {{ totaldofaatSadera.toLocaleString('ar-EG') }}
+                        {{ totaldofaatSadera }}
                       </th>
                       <th class="p-2">
-                        {{ totalkhasmMoktsb.toLocaleString('ar-EG') }}
+                        {{ totalkhasmMoktsb }}
                       </th>
                       <th class="p-2">
-                        {{ totaldofaatWareda.toLocaleString('ar-EG') }}
+                        {{ totaldofaatWareda }}
                       </th>
 
                       <th class="p-2">
-                        {{ totalmoshtryat.toLocaleString('ar-EG') }}
+                        {{ totalmoshtryat }}
                       </th>
                     </tr>
                   </tbody>
@@ -301,28 +295,26 @@
             </template>
 
             <template v-slot:item.moshtryat="{ item }">
-              <span>{{
-                (item.moshtryat + item.dofaatWareda).toLocaleString("ar-EG")
-              }}</span>
+              <span>{{ item.moshtryat + item.dofaatWareda }}</span>
             </template>
 
             <template v-slot:item.madenMo="{ item }">
-              <span>{{ item.dofaatSadera.toLocaleString("ar-EG") }}</span>
+              <span>{{ item.dofaatSadera }}</span>
             </template>
 
             <template v-slot:item.dayenMo="{ item }">
               <span>
-                {{ (item.dofaatWareda + item.moshtryat).toLocaleString("ar-EG") }}
+                {{ item.dofaatWareda + item.moshtryat }}
               </span>
             </template>
-    <template v-slot:item.quantity="{ item }">
-              <span>{{ item.quantity.toLocaleString("ar-EG") }}</span>
+            <template v-slot:item.quantity="{ item }">
+              <span>{{ item.quantity }}</span>
             </template>
             <template v-slot:item.unitPrice="{ item }">
-              <span>{{ item.unitPrice.toLocaleString("ar-EG") }}</span>
+              <span>{{ item.unitPrice }}</span>
             </template>
             <template v-slot:item.clientBalance="{ item }">
-              <span>{{ (item.clientBalance).toLocaleString("ar-EG") }}</span>
+              <span>{{ item.clientBalance }}</span>
             </template>
             <template v-if="addOrder" v-slot:body.prepend>
               <tr class="input-add-order not-print">
@@ -350,7 +342,7 @@
                 </td>
                 <td>
                   <v-autocomplete
-                  ref="resetElement"
+                    ref="resetElement"
                     dense
                     @click="searchseeds"
                     item-value="id"
@@ -364,7 +356,6 @@
                     placeholder="بحث البذرة"
                     prepend-inner-icon="mdi-seed"
                     return-object
-
                   >
                     <template v-slot:item="{ item }">
                       <div
@@ -460,7 +451,7 @@
                 </td>
 
                 <td>
-                  {{ Order.clientBalance.toLocaleString("ar-EG") }}
+                  {{ Order.clientBalance }}
                 </td>
               </tr>
             </template>
@@ -471,7 +462,10 @@
       <v-col
         cols="12"
         class="show-data-clients"
-        v-if="clientSelectedToAcc.type == 'مشتري'"
+        v-if="
+          clientSelectedToAcc.type == 'مشتري' ||
+            clientSelectedToAcc.type == 'مشترى'
+        "
       >
         <template v-if="clientSelectedToAcc.id">
           <v-data-table
@@ -494,37 +488,31 @@
             </template>
 
             <template v-slot:item.moshtryat="{ item }">
-              <span>{{
-                (item.moshtryat + item.dofaatWareda).toLocaleString("ar-EG")
-              }}</span>
+              <span>{{ item.moshtryat + item.dofaatWareda }}</span>
             </template>
             <template v-slot:item.madenSh="{ item }">
-              <span>{{
-                (item.moshtryat + item.dofaatSadera).toLocaleString("ar-EG")
-              }}</span>
+              <span>{{ item.moshtryat + item.dofaatSadera }}</span>
             </template>
 
             <template v-slot:item.dayenSh="{ item }">
               <span>
                 {{
-                  (
-                    item.tahdeen +
+                  item.tahdeen +
                     item.dofaatWareda +
                     item.mortgaa +
                     item.khasmMoktsb
-                  ).toLocaleString("ar-EG")
                 }}
               </span>
             </template>
 
             <template v-slot:item.quantity="{ item }">
-              <span>{{ item.quantity.toLocaleString("ar-EG") }}</span>
+              <span>{{ item.quantity }}</span>
             </template>
             <template v-slot:item.unitPrice="{ item }">
-              <span>{{ item.unitPrice.toLocaleString("ar-EG") }}</span>
+              <span>{{ item.unitPrice }}</span>
             </template>
             <template v-slot:item.clientBalance="{ item }">
-              <span>{{ item.clientBalance.toLocaleString("ar-EG") }}</span>
+              <span>{{ item.clientBalance }}</span>
             </template>
             <template v-if="addOrder" v-slot:body.prepend>
               <tr class="input-add-order not-print">
@@ -552,7 +540,7 @@
                 </td>
                 <td>
                   <v-autocomplete
-                  ref="resetElement"
+                    ref="resetElement"
                     dense
                     @click="searchseeds"
                     :search-input.sync="searchInput"
@@ -575,7 +563,6 @@
                       >
                         {{ item.name }}
                       </div>
-                    
                     </template>
 
                     <template v-slot:no-results>
@@ -655,15 +642,15 @@
 
                 <td>
                   <span v-if="buying">
-                    {{ totalCostBuying ? totalCostBuying.toLocaleString("ar-EG") : totalCostBuying }}
+                    {{ totalCostBuying ? totalCostBuying : totalCostBuying }}
                   </span>
                   <span v-if="selling">
-                    {{totalCostSelling ? totalCostSelling.toLocaleString("ar-EG") : totalCostSelling}}
+                    {{ totalCostSelling ? totalCostSelling : totalCostSelling }}
                   </span>
                 </td>
 
                 <td>
-                  {{ Order.clientBalance.toLocaleString("ar-EG") }}
+                  {{ Order.clientBalance }}
                 </td>
               </tr>
             </template>
@@ -718,10 +705,13 @@ import { mapState } from "vuex";
 export default {
   name: "accountclient",
   data: () => ({
+     showMsg: false,
+    colorAlert: "red",
+    msg: "",
     searchInput: "",
     notShow: false,
     hasQuNot: false,
-    status: "دائن",
+   
     // to select Seed
     selectForSeed: null,
     seedIndex: -1,
@@ -841,7 +831,6 @@ export default {
       // to
       this.Order.quantity = this.kmaia;
 
-
       this.Order.sellingPrice = this.priceSelling;
       this.totalCostSelling = (this.kmaia * this.priceSelling).toLocaleString();
 
@@ -957,6 +946,11 @@ export default {
     this.pickerEndStemp = Date.parse(`${this.pickerEnd} 23:59:59`);
   },
   methods: {
+    alertMsg(bool, color, msgs) {
+      this.showMsg = bool;
+      this.colorAlert = color;
+      this.msg = msgs;
+    },
     searchseeds() {
       this.$store.dispatch("loadSeeds");
     },
@@ -964,8 +958,6 @@ export default {
       this.$store.dispatch("loadClients");
     },
     getDataClientToAcc(item) {
-      // this.alartApp = true;
-      // this.msgAlert = "برجاء اضغط علي زر العرض لاظهار البيانات الجديدة";
       this.notShow = true;
       // this to get data selected from api for specific client
       this.clientIndexToAcc = this.clients.indexOf(item);
@@ -982,8 +974,8 @@ export default {
       // this to assign  variables  from get api to vars to post api
 
       //this to hide table after select client in perparing order
-  this.showReportClient();
-},
+      this.showReportClient();
+    },
     getDataSeed(item) {
       // this to get data selected from api for specific client
 
@@ -1009,24 +1001,22 @@ export default {
       if (this.Order.type == "بيع") {
         if (this.seed.quantity == 0) {
           this.hasQuNot = true;
-          this.alartApp = true;
-          this.msgAlert = "قم بشراء البذرة اولاً لان لا يوجد كمية متوفرة";
+          this.alertMsg(true,'blue',"قم بشراء البذرة اولاً لان لا يوجد كمية متوفرة");
         } else {
           this.hasQuNot = false;
-          this.alartApp = false;
+          this.alertMsg(false);
+
         }
       } else {
         this.hasQuNot = false;
-        this.alartApp = false;
+              this.alertMsg(false);
       }
     },
     showReportClient() {
       // this.balanceOpen = Object.assign({}, -1);
       // Object.assign(this.balanceOpen, this.dataApiFullReport[22]);
       if (this.clientSelectedToAcc.id != 0) {
-        this.msgAlert = "تم تحديث البيانات";
-        this.alartAppSuc = true;
-        this.alartApp = false;
+          this.alertMsg(true,'green',"تم تحديث البيانات");
         this.afterSelect = true;
         let payload = {
           id: this.clientSelectedToAcc.id,
@@ -1036,8 +1026,7 @@ export default {
         };
         this.$store.dispatch("loadAccountClient", payload);
       } else {
-        this.msgAlert = "برجاء اختيار العميل!!";
-        this.alartApp = true;
+          this.alertMsg(true,'green',"برجاء اختيار العميل!!");
       }
     },
     sandDataOrder() {
@@ -1071,8 +1060,8 @@ export default {
         }, 1250);
         // this.reset();
       } else {
-        this.msgAlert = "برجاء اختيار بذرة";
-        this.alartApp = true;
+          this.alertMsg(true,'blue',"برجاء اختيار بذرة");
+
       }
     },
     print() {
@@ -1083,8 +1072,7 @@ export default {
       if (this.accClient) {
         this.addOrder = true;
       } else {
-        this.alartApp = true;
-        this.msgAlert = "برجاء اختيار العميل!!";
+          this.alertMsg(true,'blue',"برجاء اختيار العميل!!");
       }
     },
     reset() {
@@ -1110,8 +1098,7 @@ export default {
       this.Order.mortgaa = 0;
       this.Order.moshtryat = 0;
       this.Order.dofaatWareda = null;
-      this.$refs.resetElement.reset()
-      
+      this.$refs.resetElement.reset();
     },
     closeOrder() {
       this.reset();

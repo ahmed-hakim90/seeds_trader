@@ -5,31 +5,18 @@
       طباعة
     </v-btn>
     <v-col cols="12" class="text-center">
-             <v-alert
+      <v-alert
         border="bottom"
         colored-border
         type="info"
         transition="leave-to-class"
-        color="cyan"
+        :color="colorAlert"
         elevation="2"
         dismissible
-        v-if="alartApp"
+        v-if="showMsg"
       >
-        {{ msgAlert }}
+        {{ msg }}
       </v-alert>
-         <v-alert
-        border="bottom"
-        colored-border
-        type="success"
-        transition="leave-to-class"
-        color="cyan"
-        elevation="2"
-        dismissible
-        v-if="alartAppSuc"
-      >
-        {{ msgAlert }}
-      </v-alert>
-   
       <p class="display-1 line-after">
         تقرير بذرة
       </p>
@@ -198,7 +185,6 @@
         <v-alert type="error" text>
           برجاء ادخل البيانات لاظهار التقرير
         </v-alert>
-        
       </v-card>
     </v-col>
     <v-col cols="12" class="show-data-clients">
@@ -236,9 +222,10 @@ import { mapState } from "vuex";
 export default {
   name: "accountclient",
   data: () => ({
-    msgAlert: "",
-    alartAppSuc: false,
-    alartApp: false,
+    showMsg: false,
+    typeAlert: "info",
+    colorAlert: "red",
+    msg: "",
     isLoading: false,
 
     searchSeed: "",
@@ -251,7 +238,7 @@ export default {
       quantity: "",
       sellingPrice: "",
       buyingPrice: "",
-      boughtQuantity: ""
+      boughtQuantity: "",
     },
     seed: {
       id: 0,
@@ -261,7 +248,7 @@ export default {
       soldQuantity: null,
       sellingPrice: "",
       buyingPrice: "",
-      boughtQuantity: ""
+      boughtQuantity: "",
     },
 
     showPickerStart: false,
@@ -283,8 +270,8 @@ export default {
       { text: "سعر الشراء", value: "sellingPrice", align: "center" },
       { text: "سعر البيع", value: "buyingPrice", align: "center" },
       { text: "مدين", value: "dayen", align: "center" },
-      { text: "دائن", value: "maden", align: "center" }
-    ]
+      { text: "دائن", value: "maden", align: "center" },
+    ],
   }),
   created() {
     setInterval(() => {
@@ -313,7 +300,7 @@ export default {
       this.msgAlert = "برجاء اضغط علي زر العرض لاظهار البيانات الجديدة";
       this.pickerStartStemp = Date.parse(`${this.pickerStart} 00:00:00 `);
       this.pickerEndStemp = Date.parse(`${this.pickerEnd} 23:59:59`);
-    }
+    },
   },
   computed: {
     startDate() {
@@ -327,13 +314,18 @@ export default {
         : "";
     },
     //  to get data from api  with vuex |||||||||||||||||||||||||||||||||||||||||||
-    ...mapState(["seeds", "reportSeed"])
+    ...mapState(["seeds", "reportSeed"]),
   },
   mounted() {
     this.pickerStartStemp = Date.parse(`${this.pickerStart} 00:00:00 `);
     this.pickerEndStemp = Date.parse(`${this.pickerEnd} 23:59:59`);
   },
   methods: {
+    alertMsg(bool, color, msgs) {
+      this.showMsg = bool;
+      this.colorAlert = color;
+      this.msg = msgs;
+    },
     searchSeedAccount() {
       this.$store.dispatch("loadSeeds");
     },
@@ -355,26 +347,25 @@ export default {
     },
     showReportSeed() {
       if (this.seedSelectedToAcc.id != 0) {
-        this.alartAppSuc = true;
-        this.alartApp = false;
-        this.msgAlert = "تم تحديث البيانات";
+        this.alertMsg(true,'green', "تم تحديث البيانات");
+        
 
         let payload = {
           id: this.seedSelectedToAcc.id,
           pickerStartStemp: this.pickerStartStemp,
-          pickerEndStemp: this.pickerEndStemp
+          pickerEndStemp: this.pickerEndStemp,
           /* more parameters */
         };
         this.$store.dispatch("loadReportSeed", payload);
       } else {
-        this.alartApp = true;
-        this.msgAlert = "برجاء اختيار البذرة!!";
+        this.alertMsg(true,'yellow',"برجاء اختيار البذرة!!");
+
       }
     },
     print() {
       // Pass the element id here
       window.print();
-    }
-  }
+    },
+  },
 };
 </script>

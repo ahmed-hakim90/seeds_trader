@@ -5,19 +5,19 @@
       طباعة
     </v-btn>
     <v-col cols="12">
-        <v-alert
+      <v-alert
+        type="info"
+        :color="colorAlert"
+        v-if="showMsg"
         border="bottom"
         colored-border
-        type="info"
         transition="leave-to-class"
-        color="green"
         elevation="2"
         dismissible
-        v-if="showMsgSuc"
       >
         {{ msg }}
       </v-alert>
-        <v-alert
+      <!-- <v-alert
         border="bottom"
         colored-border
         type="error"
@@ -28,7 +28,7 @@
         v-if="msgError"
       >
         {{ msg }}
-      </v-alert>
+      </v-alert> -->
     </v-col>
 
     <v-col cols="12" class="text-center">
@@ -118,9 +118,9 @@
                               value="مورد"
                             ></v-radio>
                             <v-radio
-                              label="عميل مشترى"
+                              label="عميل مشتري"
                               color="success"
-                              value="مشترى"
+                              value="مشتري"
                             ></v-radio>
                           </v-radio-group>
                         </v-card>
@@ -159,9 +159,10 @@ import { mapState } from "vuex";
 export default {
   name: "clients",
   data: () => ({
+    showMsg: false,
+    typeAlert: "info",
+    colorAlert: "red",
     msg: "",
-    msgError: false,
-    showMsgSuc: false,
     dialog: false,
     Client: "",
     searchClient: "",
@@ -171,7 +172,7 @@ export default {
       name: "",
       balance: 0,
       type: "",
-      phone: ""
+      phone: "",
     },
     defaultItem: null,
     headersName: [
@@ -180,8 +181,8 @@ export default {
       { text: "رقم التلفون ", value: "phone", align: "center" },
       { text: "رصيد", value: "balance", align: "center" },
       { text: "ملاحظات", value: "type", align: "center" },
-      { text: "التحكم", value: "action", sortable: false }
-    ]
+      { text: "التحكم", value: "action", sortable: false },
+    ],
   }),
   created() {
     setInterval(() => {
@@ -196,18 +197,23 @@ export default {
     loading() {
       return this.$store.getters.loading;
     },
-    ...mapState(["clients"])
+    ...mapState(["clients"]),
   },
   watch: {
     dialog(val) {
       val || this.close();
-    }
+    },
   },
 
   mounted() {
     this.$store.dispatch("loadClients");
   },
   methods: {
+    alertMsg(bool, color, msgs) {
+      this.showMsg = bool;
+      this.colorAlert = color;
+      this.msg = msgs;
+    },
     editItem(item) {
       this.editedIndex = this.clients.indexOf(item);
       this.client = Object.assign({}, item);
@@ -216,10 +222,11 @@ export default {
       Axios({
         method: "PUT",
         url: `http://localhost:8087/api/updateClientById/${this.client.id}/${this.client}`,
-        headers: { "content-type": "application/JSON" }
+        headers: { "content-type": "application/JSON" },
       }).then(() => {
-        this.showMsgSuc = true;
-        this.msg = "تم التعديل بنجاح";
+        // this.showMsgSuc = true;
+        // this.msg = "تم التعديل بنجاح";
+        this.alertMsg(true,'green',"تم التعديل بنجاح");
       });
     },
     deleteItem(item) {
@@ -230,24 +237,20 @@ export default {
         Axios({
           method: "delete",
           url: `http://localhost:8087/api/deleteClientById/${this.client.id}`,
-          headers: { "content-type": "application/JSON" }
+          headers: { "content-type": "application/JSON" },
         })
           .then(() => {
-              this.msgError = false;
-            this.showMsgSuc = true;
-            this.msg = "تم الحذف بنجاح";
+        this.alertMsg(true,'green',"تم الحذف بنجاح");
             const index = this.clients.indexOf(item);
             this.clients.splice(index, 1);
           })
-          .catch(err => {
+          .catch((err) => {
             var Console = console;
             Console.log(err);
           })
           .finally(() => (this.showMsgSuc = true));
       } else {
-        this.showMsgSuc = false;
-        this.msgError = true;
-        this.msg = "كلمة السر غير صحيحة  لم يتم الحذف";
+        this.alertMsg(true,'red',"كلمة السر غير صحيحة  لم يتم الحذف");
       }
     },
     close() {
@@ -263,14 +266,13 @@ export default {
         method: "PUT",
         url: `http://localhost:8087/api/updateClientById/${this.client.id}`,
         data: this.client,
-        headers: { "content-type": "application/JSON" }
+        headers: { "content-type": "application/JSON" },
       })
         // Axios.post(`http://localhost:8087/api/updateClientByID`)
         .then(() => {
-          this.showMsgSuc = true;
-          this.msg = "تم التعديل بنجاح";
+        this.alertMsg(true,'green',"تم التعديل بنجاح");
         })
-        .catch(err => {
+        .catch((err) => {
           var Console = console;
           Console.log(err);
         });
@@ -281,7 +283,7 @@ export default {
     print() {
       // Pass the element id here
       window.print();
-    }
-  }
+    },
+  },
 };
 </script>

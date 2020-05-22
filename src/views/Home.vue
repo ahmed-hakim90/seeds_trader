@@ -10,10 +10,10 @@
           colored-border
           type="error"
           transition="leave-to-class"
-          color="red"
+          :color="colorAlert"
           elevation="2"
           dismissible
-          v-if="datas"
+          v-if="showMsg"
         >
           {{ msg }}
         </v-alert>
@@ -68,34 +68,6 @@
     </v-dialog>
 
     <v-row class="home-btn">
-      <v-col cols="12">
-  
-<v-alert
-          border="bottom"
-          colored-border
-          type="error"
-          transition="leave-to-class"
-          color="red"
-          elevation="2"
-          dismissible
-          v-if="showMsg"
-        >
-          {{ msg }}
-        </v-alert>
-<v-alert
-          border="bottom"
-          colored-border
-          type="success"
-          transition="leave-to-class"
-          color="cyan"
-          elevation="2"
-          dismissible
-          v-if="showMsgSuc"
-        >
-          {{ msg }}
-        </v-alert>
-  
-      </v-col>
       <v-col cols="12" sm="6" md="4" class="d-flex justify-space-around">
         <v-btn
           class="elevation-10 headline"
@@ -189,26 +161,37 @@ export default {
     createBC: "",
     restoreBC: "",
     msg: "",
-    passData: null,
     showMsg: false,
-    showMsgSuc: false,
+    colorAlert: "red",
   }),
 
   methods: {
+    alertMsg(bool, color, msgs) {
+      this.showMsg = bool;
+
+      this.colorAlert = color;
+      this.msg = msgs;
+    },
     createBCApi() {
       if (this.createBC != "") {
         Axios.get(`http://localhost:8087/api/createBackup/${this.createBC}`)
           .then((res) => {
             this.passData = res.data;
             if (this.passData != "رقم سري خاطئ") {
-              this.showMsgSuc = true;
+              this.alertMsg(
+                true,
+                "blue",
+                " تم انشاء نسخة احتياطية من البيانات"
+              );
+
               this.dataBase = false;
               this.createBC = null;
-
-              this.msg = "تم انشاء نسخة احتياطية من البيانات";
             } else {
-              this.showMsg = true;
-              this.msg = "كلمة المرور الخاصة بقاعدة البيانات غير صحيحة";
+              this.alertMsg(
+                true,
+                "red",
+                "كلمة المرور الخاصة بقاعدة البيانات غير صحيحة"
+              );
             }
           })
           .catch((err) => {
@@ -216,8 +199,7 @@ export default {
             Console.log(err);
           });
       } else {
-        this.datas = true;
-        this.msg = "اكتب كلمة السر";
+        this.alertMsg(true, "yellow", "اكتب كلمة السر");
       }
     },
     restoreBCApi() {
@@ -226,13 +208,19 @@ export default {
           .then((res) => {
             this.passData = res.data;
             if (this.passData == "نجحت عملية استرجاع البيانات") {
-              this.showMsgSuc = true;
               this.dataBase = false;
               this.restoreBC = null;
-              this.msg = "تم استرجاع نسخة احتياطية من البيانات";
+              this.alertMsg(
+                true,
+                "green",
+                "تم استرجاع نسخة احتياطية من البيانات"
+              );
             } else {
-              this.showMsg = true;
-              this.msg = "كلمة المرور الخاصة بقاعدة البيانات غير صحيحة";
+              this.alertMsg(
+                true,
+                "yellow",
+                "كلمة المرور الخاصة بقاعدة البيانات غير صحيحة"
+              );
             }
           })
           .catch((err) => {
@@ -240,8 +228,7 @@ export default {
             Console.log(err);
           });
       } else {
-        this.datas = true;
-        this.msg = "اكتب كلمة السر";
+        this.alertMsg(true, "yellow", "اكتب كلمة السر");
       }
     },
   },
